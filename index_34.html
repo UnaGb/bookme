@@ -1,0 +1,1442 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>book me</title>
+<meta name="description" content="Ta pote, maintenant réservable. Arrête de demander « t'es dispo quand ? ». Book Mawuna.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Glass+Antiqua&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --choco:#521A16; --choco2:#5E1711; --rose:#F2C1B9; --rose2:#FADDD9; --cream:#FBF2ED; --ink:#3A100D; --mute:#8a5a52;
+  --ok:#D7E9C8; --okb:#557843; --maybe:#FCE8A6; --maybeb:#9A7417; --priv:#F6D3DA;
+  --title:"Glass Antiqua", Georgia, serif; --ui:"Figtree", system-ui, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{font-family:var(--ui);color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+.t{font-family:var(--title);font-weight:400;font-style:normal;font-synthesis:none;-webkit-text-stroke:.5px currentColor;letter-spacing:.01em}
+.stripes{background-color:var(--choco)}
+
+/* Boutons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--choco2);color:var(--cream);border-radius:999px;padding:14px 26px;font-weight:700;font-size:16px;box-shadow:inset 0 0 0 3px var(--choco2),inset 0 0 0 5px var(--rose2);transition:transform .15s, background .15s;text-decoration:none;white-space:nowrap}
+.btn:hover{transform:translateY(-2px);background:#6e1c15}
+.btn:disabled{opacity:.4;cursor:default;transform:none}
+.btn.soft{background:var(--cream);color:var(--choco);box-shadow:inset 0 0 0 2px var(--choco)}
+.btn.soft:hover{background:var(--rose2)}
+.btn.sm{padding:9px 16px;font-size:14px}
+.btn.ok{background:#3E6B2F;box-shadow:inset 0 0 0 3px #3E6B2F,inset 0 0 0 5px var(--ok)}
+.link{font-weight:700;font-size:14px;text-decoration:underline;text-underline-offset:4px}
+
+/* Barre du haut */
+.nav{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px clamp(16px,4vw,40px)}
+.brand{background:var(--cream);color:var(--choco);border-radius:999px;padding:8px 14px;box-shadow:inset 0 0 0 2px var(--choco);display:inline-flex;align-items:center}
+.logo-sm{height:12px;width:auto;display:block}
+.logo-h1{margin:8px 0 10px;color:var(--choco);line-height:0}
+.logo-xl{width:min(360px,62vw);height:auto;display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.navr{display:flex;gap:8px;align-items:center}
+.pill{background:var(--cream);color:var(--choco);border-radius:999px;padding:9px 14px;font-weight:700;font-size:13px;box-shadow:inset 0 0 0 2px var(--choco);display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
+.pill.link2{cursor:pointer}
+.pill.link2:hover{background:var(--rose2)}
+.pill .dot{min-width:18px;height:18px;border-radius:9px;background:#C8161D;color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px}
+
+/* Batterie sociale */
+.batt{display:inline-flex;align-items:center;flex-shrink:0}
+.batt .cell{position:relative;width:32px;height:16px;border-radius:5px;box-shadow:inset 0 0 0 2px var(--choco);padding:3px;display:block;overflow:hidden;background:var(--cream)}
+.batt .fill{display:block;height:100%;width:var(--p);border-radius:2px;background:var(--choco);background-image:repeating-linear-gradient(90deg,transparent 0 5px,var(--cream) 5px 6.5px);animation:charge 1.1s ease-out both}
+.batt.low .fill{background-color:#C8161D}
+.batt .tip{width:3px;height:7px;background:var(--choco);border-radius:0 2px 2px 0;margin-left:1px}
+.batt .bolt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;animation:pulse 1.2s ease-in-out infinite}
+@keyframes charge{from{width:0}}
+@keyframes pulse{50%{opacity:.35;transform:scale(.85)}}
+
+/* Cadre festonné */
+.frame{position:relative;width:min(560px,94vw);padding:clamp(84px,19%,116px) clamp(40px,13%,76px) clamp(76px,17%,106px)}
+.frame > svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 18px 30px rgba(40,8,6,.35))}
+.frame .in{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.kick{font-weight:700;font-size:13px;letter-spacing:.06em;color:#8a4a41}
+.hero h1.hey-h1{color:var(--choco);font-size:clamp(32px,6.4vw,46px);line-height:1.05;margin:0 0 12px}
+.kick.hey{font-family:var(--title);-webkit-text-stroke:.35px currentColor;font-weight:400;letter-spacing:.01em;font-size:clamp(19px,4.4vw,23px);color:var(--choco2)}
+
+/* Accueil */
+#vHome .hero{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:90px 16px 50px;position:relative;overflow:hidden}
+.hero h1{color:var(--choco);font-size:clamp(50px,11vw,80px);line-height:.95;margin:6px 0 2px}
+.hero h1 span{display:block;font-size:1.25em}
+.tagline{font-family:var(--title);-webkit-text-stroke:.35px currentColor;font-size:clamp(20px,4.6vw,24px);color:var(--choco2);margin-bottom:10px}
+.now{display:flex;flex-direction:column;gap:5px;align-items:center;background:#fff;border-radius:16px;padding:10px 16px;margin:0 0 14px;box-shadow:inset 0 0 0 2px var(--choco),inset 0 0 0 4px var(--rose2);min-width:min(320px,100%)}
+.now small{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.now b{font-family:var(--title);-webkit-text-stroke:.35px currentColor;font-weight:400;font-size:17px;color:var(--choco)}
+.state{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:13px;border-radius:999px;padding:4px 11px}
+.st-ok{background:var(--ok);color:#2f4a24}
+.st-maybe{background:var(--maybe);color:#6b5010}
+.st-busy{background:var(--choco);color:var(--rose2)}
+.st-private{background:var(--priv);color:var(--choco)}
+.st-off{background:#efe3de;color:var(--mute)}
+.scroll{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:var(--cream);font-weight:700;font-size:13px;background:rgba(82,26,22,.8);border-radius:999px;padding:6px 14px}
+
+.sec{max-width:1120px;margin:0 auto;padding:56px clamp(16px,4vw,40px) 100px}
+.sec h2{color:var(--choco);font-size:clamp(36px,5vw,54px);line-height:1}
+.sec .lead{font-size:16px;color:#6b3a33;margin:10px 0 22px;max-width:62ch;line-height:1.5}
+.card{background:#fff;border-radius:26px;padding:22px;box-shadow:inset 0 0 0 3px var(--choco2),inset 0 0 0 6px var(--rose2)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;font-weight:600;color:#6b3a33}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:16px;height:16px;border-radius:5px}
+.i-ok{background:var(--ok);box-shadow:inset 0 0 0 1.5px var(--okb)}
+.i-maybe{background:var(--maybe);box-shadow:inset 0 0 0 1.5px var(--maybeb)}
+.i-busy{background:var(--choco)}
+.i-private{background:repeating-linear-gradient(135deg,var(--priv) 0 4px,#fff 4px 7px);box-shadow:inset 0 0 0 1.5px var(--choco)}
+
+/* Aperçu semaine (accueil) */
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin-top:16px}
+.wday{display:flex;flex-direction:column;gap:6px;cursor:pointer;border-radius:16px;padding:8px 6px;transition:background .15s}
+.wday:hover{background:var(--cream)}
+.wday .h{text-align:center;font-weight:800;font-size:12px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase}
+.wday .n{text-align:center;font-family:var(--title);-webkit-text-stroke:.3px currentColor;font-size:22px;color:var(--choco);line-height:1}
+.wday.today .n{background:var(--choco);color:var(--cream);border-radius:999px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;margin:0 auto}
+.wbar{position:relative;height:150px;border-radius:12px;background:#f6ece8;overflow:hidden}
+.wbar i{position:absolute;left:0;right:0}
+.wday .sum{text-align:center;font-size:12px;font-weight:700;color:#6b3a33;min-height:15px}
+
+/* Calendrier */
+#vCal{min-height:100vh;background:var(--cream)}
+.band{height:140px;border-bottom:4px solid var(--choco2);position:relative}
+.band::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:6px;background:var(--rose2)}
+.calhead{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:-58px;position:relative;z-index:2}
+.title-card{background:var(--cream);border-radius:28px 28px 0 0;padding:16px 28px 4px;box-shadow:inset 0 3px 0 var(--choco2)}
+.title-card h2{color:var(--choco);font-size:clamp(40px,6vw,60px);line-height:1}
+.wnav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tab{font-weight:700;font-size:14px;background:#fff;color:var(--choco);border-radius:999px;padding:9px 15px;box-shadow:inset 0 0 0 2px var(--choco)}
+.tab.on{background:var(--choco2);color:var(--cream);box-shadow:inset 0 0 0 2px var(--choco2),inset 0 0 0 4px var(--rose2)}
+.tab:disabled{opacity:.35;cursor:default}
+.calwrap{margin-top:26px}
+.calbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.calbar b{font-family:var(--title);-webkit-text-stroke:.35px currentColor;font-weight:400;font-size:24px;color:var(--choco)}
+.tl{display:grid;grid-template-columns:44px repeat(7,minmax(0,1fr));gap:8px}
+.tl .hours{position:relative}
+.tl .hours span{position:absolute;right:4px;font-size:11px;font-weight:700;color:var(--mute);transform:translateY(-50%)}
+.col{display:flex;flex-direction:column;gap:6px;min-width:0}
+.col .ch{text-align:center;padding-bottom:4px}
+.col .ch small{display:block;font-weight:800;font-size:11px;letter-spacing:.12em;color:var(--mute);text-transform:uppercase}
+.col .ch b{font-family:var(--title);-webkit-text-stroke:.3px currentColor;font-weight:400;font-size:22px;color:var(--choco)}
+.col.today .ch b{background:var(--choco);color:var(--cream);border-radius:999px;padding:0 9px}
+.lane{position:relative;border-radius:14px;background:repeating-linear-gradient(0deg,transparent 0 calc(var(--hh) - 1px),#efe0da calc(var(--hh) - 1px) var(--hh)),#fbf7f5;box-shadow:inset 0 0 0 1.5px #ecdcd6}
+.blk{position:absolute;left:3px;right:3px;border-radius:10px;padding:5px 7px;font-size:11.5px;font-weight:700;line-height:1.15;overflow:hidden;text-align:left;display:flex;flex-direction:column;gap:1px}
+.blk .bt{font-weight:600;font-size:10.5px;opacity:.85}
+.b-ok{background:var(--ok);color:#2f4a24;box-shadow:inset 0 0 0 1.5px var(--okb);cursor:pointer;transition:transform .12s, box-shadow .12s}
+.b-ok:hover,.b-maybe:hover{transform:scale(1.02);box-shadow:inset 0 0 0 2.5px var(--choco)}
+.b-maybe{background:var(--maybe);color:#6b5010;box-shadow:inset 0 0 0 1.5px var(--maybeb);cursor:pointer;transition:transform .12s, box-shadow .12s}
+.b-busy{background:var(--choco);color:var(--rose2)}
+.b-private{background:repeating-linear-gradient(135deg,var(--priv) 0 6px,#fff 6px 11px);color:var(--choco);box-shadow:inset 0 0 0 1.5px var(--choco)}
+.b-mine{background:var(--rose2);color:var(--choco);box-shadow:inset 0 0 0 2px var(--choco2)}
+.b-full{background:none;color:var(--mute);font-weight:600;align-items:center;justify-content:center;text-align:center}
+.dayoff{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-family:var(--title);-webkit-text-stroke:.3px currentColor;font-size:16px;color:var(--mute);line-height:1.1}
+.daypick{display:none;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px}
+.daypick button{flex:0 0 auto;min-width:52px;border-radius:14px;padding:8px 6px;background:#fff;box-shadow:inset 0 0 0 2px var(--choco);color:var(--choco);font-weight:700;font-size:12px;text-align:center}
+.daypick button b{display:block;font-family:var(--title);-webkit-text-stroke:.3px currentColor;font-weight:400;font-size:20px}
+.daypick button.on{background:var(--choco2);color:var(--cream)}
+.hint{font-size:14px;color:#6b3a33;margin-top:14px}
+@media (max-width:760px){
+  .daypick{display:flex}
+  .tl{grid-template-columns:40px minmax(0,1fr)}
+  .tl .col{display:none}
+  .tl .col.sel{display:flex}
+  .col .ch{display:none}
+  .blk{font-size:13px;padding:7px 10px}
+  .blk .bt{font-size:12px}
+}
+
+/* Mes demandes (copine) */
+.reqs{display:grid;gap:12px;margin-top:10px}
+.req{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:inset 0 0 0 2px var(--choco);display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.req .em{font-size:28px;line-height:1}
+.req .bd{flex:1;min-width:200px}
+.req h4{font-family:var(--title);-webkit-text-stroke:.3px currentColor;font-weight:400;font-size:21px;color:var(--choco)}
+.req p{font-size:14px;color:#6b3a33;margin-top:3px;line-height:1.4}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;border-radius:999px;padding:4px 10px;margin-top:8px}
+.tg-pending{background:var(--maybe);color:#6b5010}
+.tg-accepted{background:var(--ok);color:#2f4a24}
+.tg-declined{background:#efe3de;color:var(--mute)}
+.tg-suggested{background:var(--rose2);color:var(--choco)}
+.req .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+/* Feuille de booking */
+.sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center;background:rgba(58,16,13,.45);padding:0}
+@media (min-width:760px){.sheet{align-items:center;padding:20px}}
+.sheet .box{width:min(620px,100%);max-height:92vh;overflow:auto;background:var(--cream);border-radius:28px 28px 0 0;padding:22px 22px calc(22px + env(safe-area-inset-bottom));box-shadow:inset 0 0 0 3px var(--choco2),inset 0 0 0 6px var(--rose2);animation:up .25s ease-out}
+@media (min-width:760px){.sheet .box{border-radius:28px}}
+@keyframes up{from{transform:translateY(30px);opacity:0}}
+.sh-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.dots{display:flex;gap:6px}
+.dots i{width:28px;height:6px;border-radius:3px;background:#ecd6d0}
+.dots i.on{background:var(--choco2)}
+.x{width:36px;height:36px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 2px var(--choco);font-weight:800;color:var(--choco)}
+.sh-when{font-size:13px;font-weight:700;color:var(--mute);letter-spacing:.04em;margin-top:10px}
+.sheet h3{font-family:var(--title);-webkit-text-stroke:.4px currentColor;font-weight:400;color:var(--choco);font-size:clamp(28px,6vw,36px);line-height:1.05;margin:4px 0 14px}
+.grid-acts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.opt{display:flex;align-items:center;gap:10px;text-align:left;background:#fff;border-radius:16px;padding:12px 14px;font-weight:700;font-size:15px;color:var(--choco);box-shadow:inset 0 0 0 2px var(--choco);transition:transform .12s, background .12s}
+.opt:hover{transform:translateY(-1px);background:var(--rose2)}
+.opt.on{background:var(--choco2);color:var(--cream);box-shadow:inset 0 0 0 2px var(--choco2),inset 0 0 0 4px var(--rose2)}
+.opt .e{font-size:22px;line-height:1}
+.opt small{display:block;font-weight:600;font-size:12.5px;opacity:.8;margin-top:2px}
+.opt:disabled{opacity:.4;cursor:default;transform:none}
+.list{display:grid;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-weight:700;font-size:14px;background:#fff;color:var(--choco);border-radius:999px;padding:8px 14px;box-shadow:inset 0 0 0 2px var(--choco)}
+.chip.on{background:var(--choco2);color:var(--cream)}
+.chip:disabled{opacity:.35;cursor:default;text-decoration:line-through}
+.fld{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.fld label{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.fld input,.fld textarea,.fld select{font-size:16px;background:#fff;border:0;border-radius:14px;padding:12px 14px;box-shadow:inset 0 0 0 2px var(--choco);resize:vertical;min-width:0}
+.fld input:focus,.fld textarea:focus,.fld select:focus{outline:none;box-shadow:inset 0 0 0 2px var(--choco),0 0 0 4px var(--rose)}
+.sh-bar{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.warn{margin-top:10px;font-size:14px;font-weight:600;color:#8a3a2c;background:#fff;border-radius:12px;padding:10px 12px;box-shadow:inset 0 0 0 1.5px var(--rose)}
+.ticket{background:#fff;border-radius:20px;padding:18px;box-shadow:inset 0 0 0 2px var(--choco);position:relative}
+.ticket .k{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--mute)}
+.ticket dl{margin-top:8px}
+.ticket dl div{display:flex;justify-content:space-between;gap:12px;border-bottom:2px dotted #d9aaa1;padding:9px 0;align-items:baseline}
+.ticket dt{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);flex-shrink:0}
+.ticket dd{font-family:var(--title);-webkit-text-stroke:.3px currentColor;color:var(--choco);font-size:19px;text-align:right}
+.sent{text-align:center;padding:10px 0}
+.sent .big{font-size:56px}
+.sent p{color:#6b3a33;margin:8px auto 0;max-width:40ch;line-height:1.5}
+
+/* Vue Mawuna */
+#vAdmin{min-height:100vh;background:var(--cream)}
+.ahead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-top:-58px;position:relative;z-index:2}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:22px}
+.stat{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:inset 0 0 0 2px var(--choco)}
+.stat b{display:block;font-family:var(--title);-webkit-text-stroke:.4px currentColor;font-weight:400;font-size:40px;color:var(--choco);line-height:1}
+.stat span{font-size:13px;font-weight:700;color:var(--mute)}
+.podium{display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:14px;color:var(--choco)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 16px}
+.panel{display:grid;gap:14px}
+.notifs{display:grid;gap:8px}
+.notif{display:flex;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600;color:var(--choco);box-shadow:inset 0 0 0 1.5px var(--rose)}
+.notif time{margin-left:auto;font-size:12px;color:var(--mute);font-weight:600;white-space:nowrap}
+.alts{display:flex;flex-direction:column;gap:8px;margin-top:10px;background:var(--cream);border-radius:14px;padding:12px}
+.alts .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-weight:700;color:var(--choco);font-size:14px}
+.friends{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.friend{background:#fff;border-radius:22px;padding:18px;box-shadow:inset 0 0 0 2px var(--choco)}
+.friend .av{width:48px;height:48px;border-radius:50%;background:var(--rose2);box-shadow:inset 0 0 0 2px var(--choco);display:flex;align-items:center;justify-content:center;font-family:var(--title);font-size:24px;color:var(--choco);margin-bottom:8px}
+.friend h4{font-family:var(--title);-webkit-text-stroke:.3px currentColor;font-weight:400;font-size:24px;color:var(--choco)}
+.friend .fs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
+.friend .fs div{background:var(--cream);border-radius:12px;padding:8px;text-align:center}
+.friend .fs b{display:block;font-family:var(--title);font-size:22px;color:var(--choco);font-weight:400}
+.friend .fs span{font-size:11px;font-weight:700;color:var(--mute)}
+.friend p{font-size:13px;color:#6b3a33;margin-top:4px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:4px 16px}
+.set h3{font-family:var(--title);-webkit-text-stroke:.35px currentColor;font-weight:400;font-size:26px;color:var(--choco)}
+.set .sub{font-size:14px;color:#6b3a33;margin-top:4px;line-height:1.45}
+.days{display:flex;gap:6px;flex-wrap:wrap}
+.days button{width:44px;height:40px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 2px var(--choco);font-weight:800;font-size:13px;color:var(--choco)}
+.days button.on{background:var(--choco2);color:var(--cream)}
+.rows{display:grid;gap:8px;margin-top:10px}
+.rowx{display:grid;grid-template-columns:90px 1fr 1fr 1.3fr 36px;gap:8px;align-items:center}
+.rowx.ev{grid-template-columns:1.3fr 1.1fr 1fr .8fr .8fr 1.1fr 36px}
+.rowx select,.rowx input{font-size:14px;background:#fff;border:0;border-radius:10px;padding:9px 10px;box-shadow:inset 0 0 0 1.5px var(--choco);min-width:0;width:100%}
+.del{width:36px;height:36px;border-radius:10px;background:#fff;box-shadow:inset 0 0 0 1.5px var(--choco);font-weight:800;color:var(--choco)}
+@media (max-width:640px){.rowx,.rowx.ev{grid-template-columns:1fr 1fr}.del{justify-self:end}}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+.cals{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px}
+.calc{background:var(--cream);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px;font-weight:700;color:var(--choco)}
+.calc small{font-weight:600;color:var(--mute)}
+.actchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.actchips span{display:inline-flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:7px 8px 7px 13px;font-weight:700;font-size:14px;box-shadow:inset 0 0 0 2px var(--choco);color:var(--choco)}
+.actchips span button{width:24px;height:24px;border-radius:50%;background:var(--rose2);font-weight:800;font-size:12px}
+.addrow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.addrow input{font-size:15px;background:#fff;border:0;border-radius:12px;padding:10px 12px;box-shadow:inset 0 0 0 1.5px var(--choco);min-width:0}
+.empty{font-family:var(--title);-webkit-text-stroke:.3px currentColor;font-size:20px;color:var(--mute);text-align:center;padding:26px 10px}
+
+/* Bascule démo */
+.demo{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:15;display:flex;gap:4px;background:var(--choco2);border-radius:999px;padding:5px;box-shadow:0 10px 24px rgba(40,8,6,.35)}
+.demo button{color:var(--rose2);font-weight:700;font-size:13px;border-radius:999px;padding:8px 14px;white-space:nowrap}
+.demo button.on{background:var(--cream);color:var(--choco)}
+.demo small{color:var(--rose);font-size:11px;font-weight:700;align-self:center;padding:0 8px 0 10px;letter-spacing:.08em}
+
+
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:30;background:var(--choco2);color:var(--cream);border-radius:999px;padding:12px 20px;font-weight:700;font-size:14px;box-shadow:inset 0 0 0 2px var(--choco2),inset 0 0 0 4px var(--rose2),0 10px 24px rgba(40,8,6,.3);max-width:92vw;text-align:center;animation:up .2s ease-out}
+#hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:40}
+#hearts span{position:absolute;bottom:-40px;animation:fly 2.8s ease-in forwards}
+@keyframes fly{to{transform:translate(var(--dx),-110vh) rotate(var(--r));opacity:.2}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:560px){
+  .brand{padding:8px 13px}
+  .logo-sm{height:11px}
+  .pill{font-size:12px;padding:8px 11px}
+  .pill .lbl{display:none}
+  .card{padding:16px}
+  .week{gap:4px}
+  .wbar{height:110px;border-radius:9px}
+  .wday{padding:6px 2px}
+  .wday .n{font-size:18px}
+  .wday.today .n{width:30px;height:30px}
+  .wday .sum{font-size:10px}
+  .demo small{display:none}
+}
+
+/* Accueil : cadre à la forme d'origine, plus grand */
+.hero .frame{width:auto;height:min(70vh,660px);aspect-ratio:578/751;padding:0;display:flex;align-items:center;justify-content:center}
+.hero .frame .in{padding:0 14%;gap:20px;width:100%;align-items:center;justify-content:center;transform:translateY(-3%)}
+.hero h1.hey-h1{text-align:center;text-wrap:balance}
+.hero h1.hey-h1 .env{display:inline-block;margin-left:.12em}
+.hero h1.hey-h1{font-size:clamp(38px,5.4vh,60px);margin:0}
+.hero .btn{font-size:17px;padding:16px 30px}
+@media (max-aspect-ratio:578/751){.hero .frame{height:auto;width:94vw}.hero h1.hey-h1{font-size:clamp(30px,9vw,44px)}}
+
+/* Calendrier date picker */
+.pcols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:880px){.pcols{grid-template-columns:1fr}}
+.pmonth{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.pmonth b{color:var(--choco);font-size:36px;line-height:1}
+.mnav{width:42px;height:42px;border-radius:50%;background:var(--rose2);color:var(--choco);font-weight:800;font-size:18px;box-shadow:inset 0 0 0 2px var(--choco)}
+.mnav:disabled{opacity:.3;cursor:default}
+.pdow,.pgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.pdow span{text-align:center;font-weight:800;font-size:12px;letter-spacing:.12em;color:var(--mute);padding-bottom:4px}
+.md{position:relative;aspect-ratio:1/1;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;background:#F8EDE8;color:#b99a93}
+.md.blank{background:none}
+.md.plain{color:#8f6f68}
+.md.busy{background:var(--choco);color:var(--rose)}
+.md.busy .lbl{position:absolute;left:4px;right:4px;bottom:5px;text-align:center;font-family:var(--title);-webkit-text-stroke:.3px currentColor;font-size:13px;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.md.busy .n{position:absolute;top:6px;left:8px;font-size:12px}
+.md.off{background:none;color:#c9b3ad}
+.md.free,.md.maybe{background:none;color:var(--choco);cursor:pointer}
+.md svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;transition:transform .15s}
+.md .num{position:relative;font-size:16px}
+.md.free:hover svg,.md.maybe:hover svg{transform:scale(1.07) rotate(-4deg)}
+.md.sel{color:var(--cream)}
+.md:focus-visible{outline:3px solid var(--choco);outline-offset:2px}
+.md.today{box-shadow:inset 0 0 0 2px #d9b8b0}
+.pside{display:flex;flex-direction:column;gap:12px}
+.pk{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.pside h3{color:var(--choco);font-size:30px;line-height:1.05}
+.pside .btn{align-self:flex-start;margin-top:6px}
+.muted{font-size:15px;color:#9b6a62}
+.pnote{font-size:14px;color:#6b3a33;background:var(--cream);border-radius:12px;padding:10px 12px}
+.chip.maybe{background:var(--maybe);box-shadow:inset 0 0 0 2px var(--maybeb);color:#6b5010}
+.chip.maybe.on{background:var(--choco2);color:var(--cream)}
+@media (max-width:560px){.pdow,.pgrid{gap:4px}.md{border-radius:10px;font-size:13px}.md.busy .lbl{font-size:11px;bottom:4px}.md.busy .n{font-size:11px;top:4px;left:6px}}
+
+.md .mk{position:absolute;right:12%;top:12%;width:9px;height:9px;border-radius:50%;background:var(--choco);box-shadow:0 0 0 2px #fff}
+.md.sel .mk{background:var(--rose2);box-shadow:0 0 0 2px var(--choco)}
+.md.late{background:#F8EDE8;color:#b99a93}
+.md.late .lbl{position:absolute;left:4px;right:4px;bottom:6px;text-align:center;font-size:10.5px;font-weight:700;line-height:1;color:#a88680}
+.md.late .n{position:absolute;top:6px;left:8px;font-size:12px}
+.pbusy{flex-basis:100%;display:flex;flex-direction:column;gap:5px;margin-top:8px;font-size:13px;font-weight:600;color:#6b3a33}
+.pbusy small{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--mute)}
+.pbusy span{display:flex;align-items:center;gap:7px}
+.pbusy i{display:inline-block;width:12px;height:12px;border-radius:4px}
+@media (max-width:560px){.md .mk{width:7px;height:7px;right:8%;top:8%}.md.late .lbl{font-size:9px}}
+
+.plab{flex-basis:100%;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:6px}
+.plab:first-child{margin-top:0}
+
+.pguide{flex-basis:100%;display:flex;gap:6px}
+.pguide span{flex:1;text-align:center;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:7px 8px;border-radius:999px;background:var(--cream);color:#b99a93}
+.pguide span.on{background:var(--choco2);color:var(--cream)}
+.pguide span.done{background:var(--rose2);color:var(--choco)}
+.ptip{flex-basis:100%;font-family:var(--title);-webkit-text-stroke:.3px currentColor;font-size:19px;color:var(--choco);margin:4px 0 2px}
+.prow{flex-basis:100%;border-radius:16px;padding:10px 12px}
+.prow.win{background:var(--cream);padding:14px}
+.prow.busy{display:flex;justify-content:space-between;gap:10px;align-items:center;background:repeating-linear-gradient(135deg,#f4e6e1 0 6px,#fbf5f3 6px 12px);color:var(--mute);font-size:13px;font-weight:700}
+.prow .pl{display:block;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.prow.busy .pl{display:inline}
+.prow .pl em{font-style:normal;text-transform:none;letter-spacing:0;background:var(--maybe);color:#6b5010;border-radius:999px;padding:2px 8px;margin-left:4px;font-size:11.5px}
+.pills{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px;margin-top:10px}
+.pp{padding:10px 4px;border-radius:999px;font-weight:700;font-size:14px;color:var(--choco);background:#fff;box-shadow:inset 0 0 0 1.5px var(--choco);transition:background .12s, transform .12s, color .12s}
+.pp:hover:not(:disabled){background:var(--rose2);transform:translateY(-1px)}
+.pp.in,.pp.hov{background:var(--rose2);box-shadow:inset 0 0 0 1.5px var(--rose2)}
+.pp.on,.pp.on:hover:not(:disabled){background:var(--choco2);color:var(--cream);box-shadow:inset 0 0 0 2px var(--choco2),inset 0 0 0 4px var(--rose2);transform:none}
+.pp:disabled{color:#cdb6b0;box-shadow:inset 0 0 0 1.5px #ecdcd6;background:transparent;cursor:default}
+@media (max-width:560px){.pills{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.pp{font-size:13px;padding:9px 2px}}
+
+/* Réservation en pleine page */
+.bsteps{list-style:none;display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 12px;padding:0}
+.bsteps li{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;color:#b99a93;background:#fff;border-radius:999px;padding:7px 14px 7px 7px;box-shadow:inset 0 0 0 1.5px #ecd6d0}
+.bsteps li span{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;background:#f3e6e1;color:#b99a93}
+.bsteps li.on{color:var(--cream);background:var(--choco2);box-shadow:inset 0 0 0 2px var(--choco2),inset 0 0 0 4px var(--rose2)}
+.bsteps li.on span{background:var(--cream);color:var(--choco)}
+.bsteps li.done{color:var(--choco);box-shadow:inset 0 0 0 1.5px var(--choco)}
+.bsteps li.done span{background:var(--rose2);color:var(--choco)}
+.bwhen{font-size:15px;color:#6b3a33;margin:4px 0 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bwhen b{color:var(--choco)}
+.bcard{max-width:760px;padding:28px}
+.bcard h3{font-family:var(--title);-webkit-text-stroke:.4px currentColor;font-weight:400;color:var(--choco);font-size:clamp(28px,4vw,40px);line-height:1.05;margin:0 0 18px}
+@media (max-width:560px){.bsteps li{font-size:12px;padding:6px 10px 6px 6px}.bsteps li span{width:20px;height:20px}.bcard{padding:18px}}
+
+.bsteps li{padding:0;background:none;box-shadow:none}
+.bsteps li button{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;color:#b99a93;background:#fff;border-radius:999px;padding:7px 14px 7px 7px;box-shadow:inset 0 0 0 1.5px #ecd6d0;transition:transform .12s, background .12s}
+.bsteps li button span{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;background:#f3e6e1;color:#b99a93}
+.bsteps li button.on{color:var(--cream);background:var(--choco2);box-shadow:inset 0 0 0 2px var(--choco2),inset 0 0 0 4px var(--rose2)}
+.bsteps li button.on span{background:var(--cream);color:var(--choco)}
+.bsteps li button.done{color:var(--choco);box-shadow:inset 0 0 0 1.5px var(--choco);cursor:pointer}
+.bsteps li button.done span{background:var(--rose2);color:var(--choco)}
+.bsteps li button.done:hover{background:var(--rose2);transform:translateY(-1px)}
+.bsteps li button:disabled{cursor:default}
+@media (max-width:560px){.bsteps li button{font-size:12px;padding:6px 10px 6px 6px}.bsteps li button span{width:20px;height:20px}}
+
+/* Sélection glisser-étirer */
+.b-ok{cursor:crosshair;user-select:none;-webkit-user-select:none}
+.selbox{position:absolute;left:3px;right:3px;z-index:3;border-radius:10px;background:var(--choco2);color:var(--cream);box-shadow:0 0 0 2px var(--rose2),0 8px 18px rgba(58,16,13,.3);padding:6px 8px 14px;display:flex;flex-direction:column;gap:2px;font-size:12px;line-height:1.15;overflow:visible;pointer-events:auto}
+.selbox .st{font-weight:800}
+.selbox .sd{font-weight:600;opacity:.85}
+.selgo{margin-top:auto;align-self:flex-start;background:var(--cream);color:var(--choco);font-weight:800;font-size:12px;border-radius:999px;padding:5px 10px;white-space:nowrap}
+.selgo:hover{background:var(--rose2)}
+.selx{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.18);color:var(--cream);font-size:10px;font-weight:800}
+.selh{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);width:34px;height:14px;border-radius:999px;background:var(--cream);box-shadow:inset 0 0 0 2px var(--choco2);cursor:ns-resize;touch-action:none}
+.selh::after{content:"";position:absolute;left:10px;right:10px;top:5px;height:2px;border-radius:2px;background:var(--choco2)}
+@media (max-width:760px){.selbox{font-size:14px}.selgo{font-size:14px;padding:7px 12px}.selh{width:44px;height:18px;bottom:-9px}.selh::after{top:7px}}
+
+.a-free{background:var(--ok);color:#2f4a24;opacity:.55;box-shadow:inset 0 0 0 1px var(--okb)}
+.a-date{background:var(--rose2);color:var(--choco);box-shadow:inset 0 0 0 2px var(--choco2);cursor:pointer;z-index:2}
+.a-pend{background:#fff;color:var(--choco);outline:2px dashed var(--choco);outline-offset:-3px;cursor:pointer;z-index:2}
+.a-date:hover,.a-pend:hover{transform:scale(1.02)}
+#vAdmin .b-busy,#vAdmin .b-private{z-index:1}
+@media (max-width:760px){.tl .hours{margin-top:0!important}}
+
+/* Notifs en popover */
+.bellwrap{position:relative}
+.notifpop{position:absolute;right:0;top:calc(100% + 10px);width:min(380px,92vw);max-height:70vh;overflow:auto;background:var(--cream);border-radius:20px;padding:14px;box-shadow:inset 0 0 0 1.5px var(--choco),0 16px 36px rgba(58,16,13,.25);z-index:12;display:grid;gap:8px}
+.nph{display:flex;justify-content:space-between;align-items:center;padding:2px 4px 4px}
+.nph b{font-weight:400;font-size:22px;color:var(--choco)}
+.notif{box-shadow:none;border:1px solid #ecd6d0}
+.notif.new{background:var(--rose2);border-color:var(--rose)}
+
+/* Moins de doubles contours */
+.card{box-shadow:inset 0 0 0 1.5px var(--choco)}
+.btn{box-shadow:none}
+.btn.soft{box-shadow:inset 0 0 0 1.5px var(--choco)}
+.btn.ok{box-shadow:none}
+.tab{box-shadow:inset 0 0 0 1.5px var(--choco)}
+.tab.on{box-shadow:none}
+.stat,.req,.friend,.ticket{box-shadow:inset 0 0 0 1.5px var(--choco)}
+.pill,.brand{box-shadow:inset 0 0 0 1.5px var(--choco)}
+.chip,.opt{box-shadow:inset 0 0 0 1.5px var(--choco)}
+.chip.on,.opt.on{box-shadow:none}
+.pp.on,.pp.on:hover:not(:disabled){box-shadow:none}
+.bsteps li button.on{box-shadow:none}
+.mnav,.x,.del,.days button{box-shadow:inset 0 0 0 1.5px var(--choco)}
+.fld input,.fld textarea,.fld select{box-shadow:inset 0 0 0 1.5px var(--choco)}
+.fld input:focus,.fld textarea:focus,.fld select:focus{box-shadow:inset 0 0 0 1.5px var(--choco),0 0 0 3px var(--rose2)}
+.selbox{box-shadow:0 8px 18px rgba(58,16,13,.3)}
+.back{box-shadow:none}
+
+.mailst{font-weight:700;border-radius:12px;padding:8px 12px;display:inline-block;margin-top:10px!important}
+.mailst.ok{background:var(--ok);color:#2f4a24}
+.mailst.sending{background:var(--cream);color:var(--mute)}
+.mailst.fail{background:var(--rose2);color:var(--choco)}
+</style>
+</head>
+<body>
+<header class="nav">
+  <button class="brand" data-go="home" aria-label="book me, accueil"><svg class="logo-sm" viewBox="-4 -4 471 96" aria-hidden="true"><path d="M15.2 86.8C14.8 86.2 14.3 85.4 14.1 85.1C13.7 84.3 12.5 82.5 12.3 82.4C12.1 82.3 12.0 81.9 11.9 81.5C11.8 81.1 11.5 80.6 11.2 80.4C11.0 80.1 10.7 79.5 10.6 79.0C10.5 78.5 10.2 77.6 9.9 76.9C9.5 76.2 9.1 74.8 9.0 73.8C8.8 72.7 8.5 71.4 8.3 70.9C8.1 70.4 8.0 69.3 8.0 68.5C8.1 67.8 7.9 66.5 7.8 65.8C7.4 64.0 7.2 47.0 7.6 44.8C7.7 43.8 7.7 43.1 7.6 42.9C7.3 42.6 7.3 33.3 7.6 32.8C7.7 32.6 7.6 31.6 7.4 30.5C7.0 28.9 7.0 28.3 7.2 27.8C7.4 27.4 7.5 26.8 7.4 26.4C7.3 26.1 7.3 25.6 7.5 25.3C7.7 24.8 7.7 24.6 7.4 24.1C7.0 23.5 7.0 23.3 7.2 22.5C7.5 21.8 7.5 21.4 7.3 21.0C7.1 20.7 7.0 20.1 7.1 19.6C7.2 19.0 7.3 12.8 7.3 11.4C7.2 11.0 5.4 10.2 5.0 10.4C4.5 10.7 2.7 10.2 1.9 9.4C1.2 8.9 1.0 8.5 1.0 7.9C1.0 7.5 0.8 6.9 0.6 6.7C0.4 6.4 0.3 6.1 0.4 5.9C0.5 5.8 0.4 5.4 0.2 5.1C-0.0 4.6 -0.0 4.4 0.3 4.2C0.5 4.0 0.8 3.6 1.0 3.2C1.1 2.8 1.7 2.2 2.2 1.8L3.3 1.0L12.2 1.0L21.2 1.0L22.5 1.7C23.4 2.1 23.8 2.5 23.9 3.0C24.0 3.3 24.2 4.1 24.4 4.7C24.9 6.0 24.6 7.2 23.5 8.9C22.7 10.0 22.5 10.1 19.6 10.5C17.5 10.8 17.4 10.8 17.6 12.5C17.7 13.4 17.6 14.5 17.5 15.2C17.3 15.8 17.3 16.5 17.4 16.7C17.5 16.9 17.6 20.2 17.6 24.1C17.6 27.9 17.7 31.0 17.8 31.0C17.9 31.0 18.2 31.0 18.4 31.0C18.6 31.0 19.0 30.6 19.3 30.2C19.5 29.7 20.1 29.2 20.5 29.0C20.9 28.8 21.5 28.4 21.7 28.1C22.2 27.3 24.6 25.9 26.4 25.4C27.2 25.1 28.0 24.8 28.1 24.6C28.4 24.3 31.4 23.6 34.0 23.2C35.4 23.0 36.3 23.1 37.9 23.4C39.0 23.6 40.6 23.8 41.5 23.9C42.4 24.0 43.5 24.3 44.0 24.5C44.5 24.8 45.1 25.0 45.3 25.0C45.6 25.0 46.1 25.2 46.5 25.5C46.8 25.7 47.9 26.3 48.8 26.7C49.6 27.2 50.6 27.8 50.9 28.1C51.1 28.5 52.1 29.3 52.9 30.0C53.8 30.7 55.0 32.1 55.8 33.2C57.3 35.4 60.0 40.5 60.0 41.2C60.0 41.4 60.3 42.2 60.6 43.0C61.0 43.7 61.2 44.5 61.2 44.9C61.2 45.2 61.4 45.6 61.6 45.9C61.8 46.2 62.0 46.7 62.0 47.0C62.0 47.4 62.2 47.9 62.4 48.2C62.6 48.5 62.7 49.0 62.7 49.3C62.6 49.7 62.6 50.6 62.8 51.4C63.2 54.1 63.5 60.6 63.2 63.9C62.8 69.0 62.1 72.8 61.4 74.1C61.2 74.5 60.9 75.4 60.9 76.1C60.8 76.8 60.5 77.5 60.1 78.0C59.8 78.4 59.5 78.8 59.5 78.9C59.5 79.4 57.3 83.7 56.7 84.4C56.3 84.9 56.0 85.4 56.0 85.6C56.0 85.7 55.5 86.4 55.0 86.9L54.0 88.0L35.0 88.0L16.1 88.0L15.2 86.8ZM77.1 87.0C76.6 86.4 76.0 85.9 75.7 85.9C75.5 85.8 75.2 85.6 75.2 85.5C75.2 85.4 74.7 84.7 74.1 84.0C73.5 83.2 73.0 82.4 73.0 82.2C73.0 81.9 72.6 81.3 72.0 80.7C71.5 80.1 70.7 78.8 70.3 77.8C69.9 76.7 69.3 75.3 69.0 74.6C68.2 72.9 67.0 68.3 67.0 67.0C67.0 66.5 66.9 65.7 66.7 65.4C66.4 64.9 66.3 63.0 66.2 57.2C66.2 56.1 67.3 48.7 67.5 48.2C67.6 48.0 67.8 47.5 67.8 47.1C67.8 46.7 67.9 46.0 68.2 45.6C68.7 44.7 69.4 42.7 69.9 41.1C70.2 40.0 70.9 38.8 72.5 36.4C72.8 36.1 73.0 35.7 73.0 35.6C73.0 35.5 73.3 35.1 73.6 34.8C74.0 34.4 74.7 33.6 75.3 32.9C75.8 32.2 77.0 31.1 78.0 30.3C78.9 29.5 79.8 28.7 80.0 28.6C80.8 27.8 83.9 26.0 84.5 25.9C84.8 25.8 85.3 25.6 85.5 25.5C85.7 25.4 86.2 25.1 86.5 25.0C86.8 24.8 87.6 24.5 88.1 24.2C88.7 24.0 89.6 23.7 90.2 23.6C90.9 23.5 91.9 23.3 92.6 23.1C94.1 22.7 102.5 22.2 103.0 22.5C103.2 22.6 104.3 22.8 105.3 22.9C106.3 22.9 107.5 23.0 108.0 23.1C108.5 23.1 109.2 23.3 109.5 23.6C109.8 23.8 110.4 24.0 110.8 24.0C112.0 24.0 114.8 25.0 115.9 25.9C116.4 26.3 117.2 26.8 117.5 26.9C117.8 27.0 118.6 27.4 119.2 27.9C119.9 28.4 121.0 29.1 121.7 29.6C122.4 30.1 123.0 30.6 123.0 30.8C123.0 30.9 123.6 31.7 124.4 32.5C126.7 34.8 129.4 38.8 130.4 41.4C130.7 42.3 131.2 43.4 131.5 43.9C131.8 44.3 132.0 45.0 132.0 45.3C132.0 45.6 132.2 46.2 132.4 46.6C132.6 47.0 132.8 47.6 132.8 47.9C132.8 48.3 132.9 49.2 133.1 50.0C133.7 52.5 134.0 56.3 133.9 59.8C133.6 65.7 133.2 69.1 132.5 70.7C132.2 71.3 132.0 72.0 132.0 72.2C132.0 72.3 131.8 72.9 131.5 73.4C131.2 73.9 131.0 74.7 131.0 75.1C131.0 75.8 130.4 77.0 129.1 79.1C128.7 79.8 128.1 80.8 127.9 81.2C127.7 81.7 127.0 82.7 126.3 83.5C125.6 84.2 125.0 84.9 125.0 85.1C125.0 85.3 124.4 86.0 123.6 86.7L122.2 88.0L100.2 88.0L78.1 88.0L77.1 87.0ZM145.9 86.2C143.7 83.7 143.1 83.0 142.9 82.2C142.8 81.8 142.5 81.4 142.4 81.2C142.2 81.1 142.0 80.8 142.0 80.6C142.0 80.5 141.8 80.1 141.5 79.9C141.2 79.6 140.8 78.9 140.5 78.3C140.2 77.6 139.6 76.3 139.1 75.4C138.6 74.4 138.1 72.8 137.9 71.9C137.6 70.9 137.3 69.6 137.1 68.9C136.9 68.3 136.8 67.5 136.9 67.1C136.9 66.8 136.9 66.2 136.6 65.8C136.3 65.2 136.3 64.4 136.2 61.2C136.2 60.8 136.2 58.9 136.2 57.1C136.2 55.3 136.3 53.4 136.5 52.9C136.7 52.3 136.9 51.1 137.0 50.1C137.1 49.1 137.3 48.1 137.4 48.0C137.6 47.8 137.8 47.3 137.8 47.0C137.8 46.6 138.1 45.7 138.5 44.9C138.9 44.1 139.2 43.3 139.2 43.1C139.2 42.9 139.5 42.1 139.9 41.5C140.2 40.8 140.5 40.1 140.5 39.9C140.5 39.5 141.7 37.0 142.0 36.9C142.2 36.8 142.5 36.4 142.7 36.0C143.5 34.8 148.1 30.0 149.9 28.5C152.1 26.8 153.1 26.2 154.4 26.0C154.9 25.8 155.6 25.5 155.9 25.3C156.2 25.0 156.6 24.8 156.8 24.8C157.0 24.8 157.4 24.6 157.6 24.4C157.9 24.2 158.4 24.0 158.8 24.0C159.2 24.0 159.9 23.8 160.3 23.6C161.4 23.0 167.9 22.3 171.0 22.4C173.7 22.5 178.9 23.1 179.3 23.4C179.6 23.7 182.9 24.8 184.5 25.1C184.9 25.2 185.6 25.6 186.1 26.1C186.7 26.5 187.6 27.1 188.2 27.4C189.4 28.0 190.8 29.1 192.8 31.1C193.5 31.7 194.1 32.3 194.2 32.2C194.4 32.2 195.3 33.4 197.1 35.8C198.6 38.0 200.0 40.5 200.4 41.8C200.6 42.6 201.0 43.5 201.3 43.8C201.5 44.2 201.8 44.7 201.8 44.9C201.8 45.2 202.1 46.3 202.4 47.4C203.1 49.5 203.5 52.0 203.6 55.1C203.7 56.2 203.8 57.5 203.9 58.0C204.0 58.6 203.9 59.2 203.8 59.5C203.5 59.9 203.5 60.2 203.8 60.8C204.0 61.3 204.0 61.6 203.7 62.0C203.6 62.4 203.4 63.5 203.4 64.5C203.3 67.1 202.9 69.5 202.4 70.4C202.2 70.9 202.0 71.6 202.0 72.0C202.0 72.4 201.8 73.1 201.5 73.4C201.2 73.8 201.0 74.3 201.0 74.6C201.0 74.9 200.4 76.2 199.7 77.7C197.9 81.2 197.7 81.6 197.1 82.2C196.8 82.4 196.2 83.2 195.8 83.9C195.3 84.5 194.2 85.7 193.5 86.5L192.0 88.0L169.8 88.0L147.6 87.9L145.9 86.2ZM205.0 87.3C205.4 86.3 207.9 85.0 209.7 84.9L211.0 84.9L211.1 79.5C211.2 76.5 211.2 73.5 211.2 72.8C211.2 72.0 211.2 68.4 211.2 64.8C211.2 61.1 211.2 57.5 211.2 56.8C211.2 56.0 211.2 51.3 211.2 46.2C211.2 41.2 211.2 36.1 211.2 34.9C211.1 32.8 211.2 22.0 211.3 20.1C211.3 19.7 211.3 17.5 211.2 15.1C211.0 10.3 211.0 10.3 208.9 10.3C207.9 10.3 207.4 10.1 206.9 9.6C206.5 9.3 206.0 9.0 205.9 9.0C205.4 9.0 204.9 7.3 204.9 5.4L204.9 3.3L206.0 2.3C206.5 1.7 207.0 1.2 207.1 1.2C207.1 1.2 213.5 0.9 216.8 0.7C217.1 0.7 219.1 0.8 221.2 0.9C226.6 1.1 227.7 1.6 228.2 4.3C228.5 5.7 228.2 7.8 227.6 8.7C226.8 9.9 225.5 10.4 223.4 10.4L221.4 10.4L221.3 13.8C221.3 15.6 221.3 18.6 221.3 20.5C221.3 22.4 221.3 24.7 221.3 25.8C221.3 26.8 221.3 28.0 221.3 28.4C221.3 28.8 221.2 33.1 221.2 37.9L221.2 46.8L221.8 46.8C222.2 46.7 222.5 46.5 222.8 46.1C223.1 45.5 224.9 44.1 225.9 43.7C226.2 43.6 226.6 43.2 226.8 42.9C226.9 42.5 227.3 42.2 227.6 42.1C228.1 41.9 230.7 39.9 231.3 39.1C231.6 38.8 232.1 38.3 232.6 38.1C233.0 37.9 233.8 37.4 234.2 36.9C234.7 36.5 235.9 35.7 236.7 35.0C237.6 34.4 238.4 33.7 238.5 33.4C238.5 33.2 238.2 32.8 237.3 32.4C235.7 31.6 235.2 30.7 235.1 28.4L235.1 26.6L236.5 25.2L237.9 23.8L247.7 23.8C256.5 23.8 257.5 23.8 258.1 24.2C258.4 24.5 258.9 24.8 259.3 24.9C259.8 25.1 260.0 25.5 260.2 26.5C260.8 29.1 260.5 30.7 258.9 32.2L258.1 33.0L255.2 33.0C253.7 33.1 252.2 33.2 251.9 33.3C251.7 33.4 251.3 33.8 251.1 34.2C250.9 34.6 250.5 35.0 250.2 35.1C249.6 35.3 247.7 36.7 246.8 37.7C245.8 38.5 244.2 39.8 243.4 40.3C242.8 40.7 241.2 42.0 239.3 43.7C238.6 44.4 238.6 44.5 239.5 45.6C239.9 46.1 240.5 47.2 240.9 47.9C241.2 48.6 241.6 49.3 241.7 49.4C241.9 49.4 242.0 49.8 242.1 50.3C242.2 50.7 242.9 51.9 243.6 52.9C244.4 53.9 245.0 54.9 245.0 55.0C245.0 55.4 247.2 59.5 248.0 60.5C248.4 61.0 248.9 61.9 249.0 62.4C249.2 62.8 249.7 63.8 250.3 64.5C250.8 65.3 251.2 66.0 251.2 66.2C251.2 66.4 251.5 67.0 251.9 67.5C252.2 68.1 253.0 69.4 253.6 70.5C254.1 71.5 255.1 73.1 255.7 74.1C256.3 75.0 256.8 75.9 256.9 76.2C257.0 76.4 257.6 77.5 258.2 78.6C258.8 79.6 259.3 80.6 259.3 80.8C259.3 81.0 259.8 82.0 260.5 83.0L261.7 84.9L263.0 85.1C267.2 85.6 267.6 85.7 268.4 86.6C268.9 87.1 269.2 87.6 269.2 87.7C269.2 87.9 265.2 88.0 257.1 88.0L245.0 88.0L245.0 87.5C245.2 86.7 247.2 85.3 248.2 85.3C250.0 85.2 250.1 84.8 249.0 82.9C248.6 82.2 248.0 81.0 247.6 80.3C247.0 79.0 245.2 75.8 243.7 73.5C243.4 72.9 243.0 72.2 243.0 72.0C243.0 71.8 242.8 71.3 242.6 71.0C242.0 70.2 240.8 68.1 240.2 66.8C239.9 66.1 239.1 64.7 238.3 63.7C237.6 62.6 237.0 61.5 237.0 61.3C237.0 61.0 236.8 60.5 236.5 60.2C236.2 59.8 236.0 59.4 236.0 59.2C236.0 59.0 235.7 58.5 235.4 58.0C235.0 57.6 234.8 57.2 234.8 57.0C234.8 56.9 234.4 56.2 233.9 55.6C233.4 55.0 233.0 54.3 233.0 54.1C233.0 53.6 231.8 51.4 231.2 51.1C230.5 50.6 229.8 50.8 228.6 51.9C228.1 52.4 227.3 53.0 227.0 53.2C226.6 53.5 225.4 54.3 224.3 55.1C223.3 56.0 222.2 56.7 221.9 56.9C221.4 57.1 221.4 57.4 221.4 61.1C221.4 63.3 221.3 66.9 221.3 69.0C221.2 71.1 221.3 74.3 221.3 76.0C221.3 77.7 221.4 79.9 221.3 80.9C221.3 81.8 221.3 83.1 221.3 83.8L221.4 84.9L222.8 85.0C224.1 85.1 225.1 85.6 226.3 86.7C227.7 88.0 227.9 88.0 215.9 88.0L204.8 88.0L205.0 87.3ZM309.3 87.8C309.3 87.7 309.5 87.3 309.8 86.8C310.5 85.6 312.2 84.9 314.1 85.1C315.4 85.3 315.5 85.2 315.7 84.7C316.1 83.8 316.0 33.8 315.7 33.6C315.5 33.4 314.2 33.2 312.8 33.1C310.7 33.0 310.1 32.9 309.4 32.4C308.3 31.6 307.9 30.6 307.8 28.5C307.7 26.8 307.8 26.5 308.2 25.8C309.1 24.8 310.4 24.0 311.7 23.8C312.4 23.6 313.0 23.5 313.1 23.5C313.3 23.4 313.8 23.5 314.3 23.7C315.0 24.0 315.5 24.0 316.1 23.8C317.1 23.4 323.4 23.6 324.3 24.0C324.6 24.1 325.2 24.5 325.5 24.9C326.1 25.5 326.1 25.7 326.1 29.1C326.1 31.4 326.2 32.6 326.4 32.7C326.6 32.7 327.2 32.0 327.7 31.0C329.1 28.7 332.1 26.0 334.5 24.8C336.6 23.8 338.8 23.2 342.0 23.0C345.3 22.8 347.5 22.9 349.2 23.6C350.9 24.2 353.7 26.1 354.7 27.3C356.2 29.0 357.2 30.6 357.2 31.0C357.2 31.2 357.5 31.7 357.9 32.0C358.2 32.3 358.5 32.7 358.5 32.9C358.5 33.5 359.0 34.0 359.4 34.0C359.6 34.0 360.0 33.5 360.3 32.9C361.1 31.6 365.2 27.8 367.7 26.1C368.8 25.3 370.6 24.4 371.8 23.9C373.7 23.1 374.4 23.0 376.6 22.9C381.4 22.6 382.7 22.7 385.1 23.9C386.1 24.4 387.1 24.7 387.3 24.7C387.6 24.8 387.9 25.0 388.0 25.2C388.1 25.5 388.5 25.8 388.9 25.9C389.5 26.1 391.2 27.9 391.8 29.1C392.0 29.5 392.6 30.5 393.1 31.2C393.6 31.9 394.0 32.9 394.1 33.5C394.2 34.0 394.4 34.7 394.6 34.9C394.8 35.2 395.0 35.8 395.0 36.3C395.0 36.8 395.2 37.6 395.4 38.1C395.7 38.5 395.9 39.4 395.9 40.0C396.2 42.8 396.3 51.0 396.2 61.2C396.2 65.6 396.2 78.8 396.2 81.9C396.2 82.3 396.3 83.1 396.4 83.7C396.6 84.7 396.7 84.9 397.5 85.0C398.0 85.1 398.6 85.2 398.8 85.1C399.3 84.9 402.2 86.9 402.3 87.5C402.5 88.0 402.2 88.0 391.7 88.0C383.2 88.0 381.0 87.9 381.2 87.7C382.2 85.9 383.2 85.2 384.9 85.2C385.4 85.2 385.8 85.1 385.9 84.9C386.0 84.7 386.3 59.3 386.2 55.6C386.1 46.7 385.9 41.0 385.7 40.4C385.2 39.0 384.8 37.0 384.7 36.3C384.7 35.4 382.8 32.9 381.6 32.4C380.8 32.0 379.9 31.9 377.3 31.9C374.1 31.8 373.9 31.9 373.2 32.4C372.9 32.7 372.4 33.0 372.2 33.0C372.0 33.0 371.5 33.3 371.1 33.7C370.6 34.1 370.0 34.6 369.7 34.9C368.3 36.2 367.0 37.7 367.0 38.0C367.0 38.3 366.8 38.6 366.5 38.9C366.2 39.1 366.0 39.5 366.0 39.6C366.0 39.8 365.8 40.1 365.6 40.3C365.4 40.4 365.0 41.0 364.8 41.6C364.5 42.2 364.1 42.8 363.9 43.0C363.7 43.2 363.5 43.5 363.5 43.8C363.5 44.1 363.2 45.3 362.8 46.6C361.9 49.5 361.3 52.1 361.2 53.2C361.2 53.7 361.2 60.8 361.1 68.9C361.1 77.0 361.0 83.9 360.9 84.2C360.7 84.6 360.8 84.8 361.4 85.0C361.8 85.1 362.3 85.2 362.5 85.1C362.8 85.0 363.5 85.2 364.1 85.5C364.7 85.8 365.3 86.0 365.4 86.0C365.7 86.0 367.2 87.4 367.2 87.7C367.2 87.9 363.8 88.0 356.1 88.0C347.2 88.0 345.0 87.9 345.0 87.7C345.0 87.5 345.5 86.9 346.1 86.3C347.0 85.4 347.3 85.2 348.1 85.2C350.8 85.3 350.7 85.3 350.9 84.7C351.1 84.0 351.1 44.2 350.9 41.3C350.8 40.1 350.5 38.9 350.4 38.6C350.2 38.4 350.0 37.8 349.9 37.3C349.7 36.2 348.6 34.6 347.0 33.2C346.0 32.3 345.5 32.0 344.6 31.8C342.3 31.5 339.3 31.8 338.2 32.5C337.7 32.8 337.1 33.0 336.9 33.0C336.0 33.0 332.0 36.4 332.0 37.2C332.0 37.4 331.8 37.7 331.5 37.9C331.2 38.2 331.0 38.5 331.0 38.6C331.0 38.8 330.8 39.2 330.7 39.5C328.8 42.9 328.2 44.0 328.2 44.4C328.2 44.6 328.0 45.3 327.8 45.9C327.5 46.5 327.2 47.8 327.1 48.8C327.0 49.8 326.8 51.0 326.5 51.4C326.2 52.0 326.1 54.2 326.1 67.6C326.1 76.2 326.1 83.5 326.2 84.0C326.4 84.8 326.5 84.9 327.6 85.0C328.4 85.1 329.1 85.4 330.2 86.3C330.9 86.9 331.6 87.5 331.7 87.7C331.8 87.9 329.4 88.0 320.5 88.0C314.3 88.0 309.3 87.9 309.3 87.8ZM416.8 87.3C416.6 86.9 415.7 85.6 414.8 84.4C412.8 81.9 411.8 80.2 411.7 79.7C411.7 79.5 411.5 79.0 411.2 78.6C410.7 77.6 409.8 75.1 409.7 74.5C409.7 74.3 409.6 73.8 409.4 73.4C409.2 73.0 409.0 72.5 409.0 72.2C409.0 71.9 408.8 71.4 408.6 71.0C408.4 70.5 408.1 69.0 408.0 67.3C407.9 65.7 407.6 64.0 407.5 63.5C407.3 62.8 407.3 62.4 407.5 62.1C407.7 61.7 407.7 61.4 407.4 60.8C407.2 60.2 407.2 59.8 407.4 59.3C407.6 58.8 407.6 57.6 407.5 55.7C407.4 54.1 407.4 52.7 407.5 52.5C407.7 52.2 407.9 50.9 408.1 49.6C408.8 45.2 409.2 43.5 409.7 42.9C409.8 42.8 410.0 42.1 410.1 41.5C410.2 40.9 410.5 40.0 411.0 39.4C411.4 38.8 411.8 38.1 411.8 38.0C411.8 37.8 412.1 37.1 412.5 36.5C412.9 35.9 413.2 35.2 413.2 35.1C413.2 34.8 413.8 34.1 415.3 32.1C416.2 31.0 420.5 26.7 420.8 26.7C420.9 26.7 421.6 26.4 422.2 25.9C422.9 25.4 423.6 25.0 423.8 25.0C424.0 25.0 424.5 24.8 424.8 24.5C425.8 23.8 427.7 23.0 428.7 23.0C429.2 23.0 429.8 22.9 429.9 22.7C430.2 22.4 432.7 22.3 437.5 22.2C439.4 22.2 440.4 22.3 441.1 22.6C441.6 22.8 442.3 23.0 442.7 23.0C443.1 23.0 443.6 23.2 443.9 23.5C444.2 23.8 444.6 24.0 445.3 24.0C446.4 24.0 447.9 24.9 451.0 27.4C453.2 29.1 454.3 30.2 456.1 32.7C457.8 35.1 460.0 39.2 460.0 40.1C460.0 40.4 460.2 40.8 460.3 41.0C460.5 41.1 460.8 41.9 460.8 42.6C460.9 43.3 461.2 44.4 461.4 45.0C462.6 48.5 461.6 52.9 459.2 53.8C458.8 54.0 444.9 54.3 437.1 54.2C435.8 54.2 430.0 54.2 427.4 54.2C419.0 54.1 418.5 54.1 417.9 54.7C417.3 55.3 417.3 55.4 417.4 58.8C417.5 60.7 417.6 62.4 417.7 62.6C417.8 62.9 418.3 66.8 418.3 67.7C418.3 68.1 418.4 68.6 418.6 68.9C418.8 69.2 419.0 69.9 419.0 70.4C419.0 70.9 419.3 72.0 419.6 72.7C420.0 73.5 420.7 74.9 421.1 75.9C421.6 76.8 422.1 78.0 422.4 78.5C422.6 79.1 423.1 79.6 423.4 79.9C423.7 80.1 424.0 80.4 424.0 80.6C424.0 81.3 427.3 84.2 429.5 85.6C431.3 86.7 431.9 86.9 433.2 86.9C434.4 87.0 434.8 87.2 435.0 87.5C435.3 88.0 435.0 88.0 426.2 88.0L417.1 88.0L416.8 87.3ZM439.8 87.9C439.8 87.6 440.6 87.0 441.2 87.0C442.0 87.0 443.5 86.2 443.9 85.5C444.1 85.2 444.5 85.0 444.8 85.0C445.2 85.0 445.8 84.6 446.4 83.9C447.7 82.5 449.0 80.6 449.0 80.2C449.0 80.1 449.4 79.2 450.0 78.2C450.6 77.3 451.0 76.4 451.0 76.3C451.0 76.0 453.7 73.4 454.3 73.2C454.6 73.1 455.8 73.0 456.9 73.1C458.9 73.3 459.0 73.3 459.9 74.3C461.5 75.9 461.8 76.8 461.6 78.9C461.4 80.9 460.5 83.1 458.7 85.4C458.1 86.2 457.4 87.1 457.3 87.4L457.0 88.0L448.4 88.0C443.6 88.0 439.8 88.0 439.8 87.9ZM36.8 87.1C37.5 87.1 38.6 86.9 39.2 86.6C39.9 86.4 40.7 86.1 41.1 86.0C43.1 85.5 47.1 81.9 48.7 79.3C49.3 78.4 49.8 77.5 49.8 77.4C49.8 77.2 50.0 76.6 50.3 75.9C51.1 74.2 51.5 73.2 51.9 71.4C52.1 70.5 52.5 69.6 52.7 69.2C52.9 68.7 52.9 68.4 52.8 67.9C52.6 67.4 52.6 67.0 52.9 66.5C53.3 65.8 53.3 65.1 53.2 59.4C53.2 56.7 52.8 51.9 52.5 50.4C52.3 49.7 52.1 48.7 52.0 48.1C51.8 46.8 51.3 45.4 50.6 43.9C50.3 43.2 50.0 42.2 49.9 41.7C49.8 41.2 49.5 40.6 49.3 40.4C49.0 40.2 48.1 38.9 47.2 37.6C46.4 36.3 45.4 35.2 45.1 35.1C44.6 34.9 43.4 34.1 42.7 33.4C42.4 33.2 41.9 33.0 41.4 33.0C40.9 33.0 40.1 32.8 39.5 32.5C38.5 32.0 38.2 31.9 35.0 32.1C31.5 32.2 29.2 32.7 27.8 33.8C27.5 34.0 27.0 34.2 26.9 34.2C26.2 34.3 21.0 40.5 21.0 41.3C21.0 41.5 20.8 41.9 20.5 42.1C20.2 42.4 20.0 42.7 20.0 42.9C20.0 43.1 19.8 43.6 19.6 44.0C19.4 44.5 19.1 45.3 19.0 46.0C18.9 46.6 18.6 47.6 18.4 48.2C17.3 51.6 16.7 59.5 17.1 65.1C17.3 67.0 17.5 68.9 17.7 69.2C17.8 69.6 18.0 70.6 18.1 71.5C18.2 72.5 18.5 73.5 18.8 73.9C19.0 74.3 19.2 74.8 19.2 75.1C19.2 75.3 19.6 76.1 20.1 76.8C20.6 77.5 21.0 78.3 21.0 78.5C21.0 78.6 21.5 79.4 22.1 80.2C22.7 80.9 23.2 81.6 23.2 81.8C23.2 82.0 26.9 85.0 27.1 85.0C27.2 85.0 27.9 85.4 28.6 85.9C29.7 86.6 30.3 86.8 31.5 86.9C32.4 87.0 33.3 87.2 33.5 87.3C33.7 87.4 34.2 87.4 34.6 87.3C35.0 87.2 36.0 87.1 36.8 87.1ZM103.0 86.6C104.9 86.4 106.5 86.0 107.0 85.6C107.2 85.4 107.8 85.2 108.2 85.1C109.6 84.8 111.6 83.7 112.9 82.5C113.6 81.8 114.4 81.2 114.8 81.0C115.2 80.8 115.8 80.2 116.2 79.6C116.6 79.1 117.2 78.3 117.5 78.0C118.9 76.4 119.3 75.8 119.9 74.3C120.4 73.5 120.9 72.4 121.2 72.0C121.5 71.6 121.9 70.7 122.0 69.9C122.1 69.2 122.4 68.2 122.6 67.7C122.8 67.2 123.0 66.4 123.0 65.9C123.0 65.4 123.1 64.7 123.3 64.3C123.9 62.7 124.0 56.3 123.4 53.9C123.2 53.1 123.0 52.0 122.9 51.5C122.7 49.8 121.8 47.0 120.9 45.5C120.4 44.7 120.0 44.0 120.0 43.9C120.0 43.8 119.4 42.9 118.8 41.9C116.6 38.5 113.2 35.3 110.8 34.2C110.4 34.1 110.0 33.8 109.8 33.7C108.4 32.9 106.5 32.1 105.5 31.9C103.2 31.5 101.1 31.2 100.6 31.2C97.5 31.3 95.2 31.7 92.9 32.5C92.5 32.6 91.7 32.8 91.1 33.0C90.5 33.1 89.8 33.5 89.5 33.9C89.1 34.2 88.5 34.7 88.1 34.9C87.2 35.4 84.2 37.8 84.2 38.0C84.2 38.1 84.0 38.5 83.6 38.9C81.0 41.8 79.0 45.2 77.9 48.6C76.9 52.0 76.0 59.0 76.5 60.7C76.6 61.2 76.8 62.1 76.8 62.8C76.8 63.9 77.2 66.2 77.7 67.6C77.8 68.0 78.3 69.5 78.7 71.0C79.5 73.4 79.9 74.2 81.9 76.9C82.7 77.9 82.8 78.1 85.2 80.7C86.5 82.1 88.6 83.8 89.7 84.2C89.9 84.3 90.4 84.5 90.8 84.8C91.1 85.0 91.7 85.2 92.0 85.3C92.3 85.4 93.2 85.7 94.0 86.0C94.8 86.2 96.2 86.6 97.3 86.7C99.1 86.9 99.6 86.9 103.0 86.6ZM172.9 86.6C174.8 86.5 177.1 85.8 177.8 85.4C178.0 85.2 178.5 85.0 178.9 84.9C179.4 84.8 180.2 84.4 180.8 84.0C181.4 83.6 181.9 83.2 182.0 83.2C182.2 83.2 183.9 81.8 185.3 80.3C186.9 78.8 188.1 77.2 188.9 75.9C189.4 75.1 190.1 74.0 190.6 73.3C191.2 72.6 191.5 71.8 191.8 70.6C191.9 69.6 192.2 68.6 192.4 68.2C193.5 66.2 194.2 56.8 193.5 55.4C193.3 55.1 193.1 54.2 193.1 53.3C193.1 52.5 192.8 51.4 192.6 51.0C192.4 50.6 192.3 50.1 192.4 50.0C192.6 49.6 191.1 45.5 190.3 44.8C190.1 44.6 190.0 44.3 190.0 44.1C190.0 43.9 189.6 43.2 189.0 42.5C188.4 41.8 188.0 41.2 188.0 41.1C188.0 40.7 184.9 37.3 183.1 35.8C182.1 35.0 181.0 34.2 180.6 34.1C180.2 34.0 179.5 33.7 179.0 33.3C178.6 33.0 178.0 32.8 177.7 32.8C177.4 32.8 177.0 32.6 176.7 32.5C176.0 32.1 172.5 31.2 172.2 31.4C172.1 31.5 171.1 31.4 170.0 31.3C168.2 31.1 167.7 31.1 166.4 31.5C165.6 31.8 164.3 32.1 163.6 32.2C162.9 32.2 162.1 32.5 162.0 32.7C161.8 32.8 161.4 33.0 161.1 33.0C160.8 33.0 160.0 33.5 159.4 34.0C158.7 34.6 158.1 35.0 157.9 35.0C157.6 35.0 155.0 37.4 152.5 40.1C150.7 42.1 149.0 44.8 149.0 45.7C149.0 46.0 148.6 46.9 148.1 47.8C147.4 49.1 147.3 49.7 147.1 51.6C147.0 52.9 146.8 54.1 146.6 54.4C146.2 55.1 146.2 55.8 146.6 56.2C146.8 56.4 146.8 56.6 146.6 56.9C146.3 57.5 146.4 63.5 146.7 64.2C146.9 64.5 147.0 65.1 147.0 65.6C147.0 66.1 147.2 66.9 147.4 67.4C147.6 67.9 147.8 68.6 147.8 69.0C147.8 69.4 148.2 70.6 148.8 71.6C149.3 72.6 149.8 73.7 149.8 73.9C149.8 75.1 155.1 81.3 157.5 82.9C158.1 83.3 158.7 83.7 158.9 83.8C160.0 84.6 161.9 85.5 162.3 85.5C162.5 85.5 163.2 85.7 163.7 85.9C164.9 86.4 168.5 87.0 170.0 86.9C170.6 86.8 171.9 86.7 172.9 86.6ZM450.8 43.7C450.8 43.0 450.6 42.2 450.4 41.9C450.2 41.6 450.0 41.1 450.0 40.9C450.0 40.6 449.8 40.1 449.5 39.9C449.2 39.6 448.9 39.2 448.9 38.9C448.3 37.3 443.2 32.0 442.2 32.0C441.8 32.0 441.1 31.8 440.5 31.5C439.9 31.2 439.0 31.0 438.6 31.0C438.1 31.0 437.3 30.9 436.7 30.7C434.9 30.2 430.8 31.2 428.8 32.5C428.5 32.6 428.0 32.9 427.6 33.2C427.1 33.4 426.5 34.0 426.3 34.4C426.0 34.9 425.6 35.2 425.4 35.2C425.0 35.2 424.2 36.1 423.8 37.0C423.6 37.3 423.0 38.3 422.5 39.1C422.0 40.0 421.4 40.9 421.2 41.2C421.1 41.6 420.7 42.3 420.5 42.8C420.0 43.7 419.9 44.5 420.1 44.8C420.2 44.9 427.1 44.9 435.6 44.9L450.9 44.9L450.8 43.7Z" fill="currentColor"/></svg></button>
+  <div class="navr">
+    <span class="pill" id="battPill"></span>
+    <button class="pill link2" id="myReqPill" hidden></button>
+    <div class="bellwrap"><button class="pill link2" id="bellPill" hidden aria-haspopup="true" aria-expanded="false"></button><div class="notifpop" id="notifPop" hidden></div></div>
+  </div>
+</header>
+
+<!-- ============ ACCUEIL ============ -->
+<main id="vHome">
+  <section class="hero stripes">
+    <div class="frame">
+      <svg viewBox="0 0 578 751" preserveAspectRatio="none" aria-hidden="true"><path d="M270 0 L269 1 L247 3 L225 8 L208 14 L190 23 L177 32 L162 46 L147 69 L136 81 L129 86 L117 92 L98 99 L75 112 L62 123 L48 142 L43 154 L39 171 L39 220 L38 221 L37 231 L30 247 L10 275 L5 286 L0 305 L0 326 L5 344 L17 367 L19 374 L18 393 L15 402 L7 416 L0 439 L0 461 L4 476 L11 491 L17 500 L30 515 L38 530 L41 544 L41 566 L42 567 L43 586 L46 600 L50 611 L58 625 L72 640 L86 650 L100 657 L126 665 L141 674 L149 682 L159 699 L172 714 L187 725 L204 734 L226 742 L253 748 L268 749 L269 750 L308 750 L309 749 L330 747 L348 743 L371 735 L390 725 L410 709 L419 697 L425 686 L436 674 L451 665 L472 659 L491 650 L505 640 L515 630 L522 620 L530 603 L534 586 L535 562 L536 561 L536 544 L540 528 L547 515 L567 489 L573 476 L576 466 L576 461 L577 460 L577 438 L573 422 L562 401 L560 395 L558 378 L561 365 L572 345 L577 327 L577 304 L572 285 L565 271 L546 245 L539 228 L539 223 L538 222 L538 171 L537 170 L536 160 L532 148 L521 129 L506 114 L491 104 L479 98 L458 91 L445 84 L433 73 L416 47 L403 34 L389 24 L372 15 L349 7 L324 2 L308 1 L307 0Z" fill="#5E1711"/><path d="M282 27 L281 28 L260 29 L236 34 L221 39 L203 48 L192 56 L182 66 L169 87 L155 102 L135 113 L125 116 L107 125 L95 134 L82 150 L74 169 L71 185 L72 222 L71 223 L70 238 L67 247 L62 256 L43 281 L37 294 L34 306 L34 325 L36 334 L43 350 L49 359 L54 376 L54 385 L51 398 L38 423 L34 439 L34 453 L38 468 L45 482 L61 499 L68 509 L72 518 L76 539 L76 561 L77 562 L78 574 L83 590 L88 600 L95 610 L101 616 L112 624 L125 630 L147 637 L164 647 L173 657 L188 680 L199 690 L213 699 L226 705 L250 712 L269 714 L270 715 L294 716 L295 715 L308 715 L309 714 L315 714 L331 711 L351 705 L366 698 L378 690 L389 680 L397 669 L403 658 L416 645 L426 639 L451 631 L465 624 L472 619 L487 603 L494 589 L499 572 L500 558 L501 557 L501 537 L502 536 L502 529 L504 520 L512 505 L533 480 L539 468 L543 453 L543 438 L539 422 L527 399 L524 389 L524 372 L529 358 L538 343 L542 331 L543 307 L541 298 L536 285 L515 256 L506 237 L505 232 L505 202 L506 201 L505 178 L500 160 L490 143 L477 130 L470 125 L456 118 L439 112 L429 107 L418 99 L411 91 L395 66 L385 56 L372 47 L350 37 L333 32 L317 29 L310 29 L309 28Z" fill="#FADDD9"/><path d="M286 43 L285 44 L270 44 L269 45 L250 47 L232 52 L213 61 L202 69 L196 75 L179 101 L166 114 L147 125 L128 132 L115 139 L101 152 L97 158 L91 172 L88 186 L88 234 L86 244 L77 263 L59 287 L53 299 L51 306 L52 329 L54 335 L67 359 L71 377 L69 397 L52 434 L51 453 L54 464 L57 470 L66 482 L79 496 L87 510 L92 530 L93 559 L94 560 L94 567 L96 577 L100 588 L104 595 L115 607 L129 615 L152 622 L169 631 L186 647 L199 668 L212 680 L226 688 L239 693 L260 698 L275 699 L276 700 L302 700 L303 699 L317 698 L338 693 L351 688 L362 682 L369 677 L378 668 L392 646 L403 635 L419 625 L444 617 L456 611 L468 601 L476 589 L481 576 L483 567 L485 532 L486 531 L487 520 L491 508 L500 494 L519 472 L523 464 L526 454 L525 433 L523 427 L512 406 L507 389 L507 373 L511 358 L523 336 L526 326 L526 307 L521 292 L496 257 L490 242 L489 231 L488 230 L488 205 L489 204 L488 180 L483 163 L474 149 L459 137 L449 132 L425 123 L412 115 L398 101 L383 77 L374 68 L362 60 L347 53 L316 45 L309 45 L308 44Z" fill="#FBF2ED"/></svg>
+      <div class="in">
+        <h1 class="t hey-h1">Heeey, wanna<br>book me?<span class="env">💌</span></h1>
+        <button class="btn" id="bookNext">Voir mon agenda →</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<main id="vMine" hidden>
+  <div class="band stripes"></div>
+  <div class="sec" style="padding-top:0">
+    <div class="calhead">
+      <div class="title-card"><h2 class="t">Tes demandes</h2></div>
+      <button class="tab" data-go="pick">+ Nouvelle demande</button>
+    </div>
+    <p class="lead" style="margin-top:22px">Tout ce que tu as demandé à <span class="js-host">Mawuna</span>, et ses réponses.</p>
+    <div class="reqs" id="mineList"></div>
+  </div>
+</main>
+
+<!-- ============ CALENDRIER ============ -->
+<main id="vPick" hidden>
+  <div class="band stripes"></div>
+  <div class="sec" style="padding-top:0">
+    <div class="calhead">
+      <div class="title-card"><h2 class="t">Mes dispos</h2></div>
+      <button class="tab" id="toAgenda">Voir mon agenda en détail →</button>
+    </div>
+    <p class="lead" style="margin-top:22px">Les jours encadrés sont libres. Choisis un jour, ton heure de début et ton heure de fin : je reçois ta demande et je te confirme vite ♥</p>
+    <div class="pcols">
+      <div class="card">
+        <div class="pmonth"><button class="mnav" id="pPrev" aria-label="Mois précédent">←</button><b class="t" id="pMonth"></b><button class="mnav" id="pNext" aria-label="Mois suivant">→</button></div>
+        <div class="pdow"><span>LUN</span><span>MAR</span><span>MER</span><span>JEU</span><span>VEN</span><span>SAM</span><span>DIM</span></div>
+        <div class="pgrid" id="pGrid"></div>
+        <div class="legend" style="margin-top:16px"><span><i style="background:#FADDD9;box-shadow:inset 0 0 0 2px #5E1711"></i>Libre</span><span><i class="i-busy"></i>Occupée toute la journée</span><span><i style="width:10px;height:10px;border-radius:50%;background:#521A16"></i>Occupée un moment</span></div>
+      </div>
+      <div class="card pside">
+        <small class="pk">Le moment</small>
+        <h3 class="t" id="pDay">Choisis un jour</h3>
+        <div class="chips" id="pTimes"><span class="muted">Clique sur un jour encadré dans le calendrier.</span></div>
+        <p class="pnote" id="pNote" hidden></p>
+        <button class="btn" id="pGo" disabled>Continuer →</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<main id="vBook" hidden>
+  <div class="band stripes"></div>
+  <div class="sec" style="padding-top:0">
+    <div class="calhead">
+      <div class="title-card"><h2 class="t" id="bookTitle">Ta demande</h2></div>
+    </div>
+    <ol class="bsteps" id="bookSteps"></ol>
+    <p class="bwhen" id="bookWhen"></p>
+    <div class="card bcard" id="bookBox"></div>
+  </div>
+</main>
+
+<main id="vCal" hidden>
+  <div class="band stripes"></div>
+  <div class="sec" style="padding-top:0">
+    <div class="calhead">
+      <div class="title-card"><h2 class="t">Mon agenda</h2></div>
+      <div class="wnav">
+        <button class="tab" id="backPick">← Calendrier</button>
+        <button class="tab" data-w="0">Cette semaine</button>
+        <button class="tab" data-w="1">Semaine pro</button>
+        <button class="tab" id="wPrev" aria-label="Semaine précédente">←</button>
+        <button class="tab" id="wNext" aria-label="Semaine suivante">→</button>
+      </div>
+    </div>
+    <div class="calwrap card">
+      <div class="calbar"><b id="wLabel"></b><div class="legend"><span><i class="i-ok"></i>Libre</span><span><i class="i-busy"></i>Occupée</span><span><i class="i-private"></i>Privé</span></div></div>
+      <div class="daypick" id="dayPick"></div>
+      <div class="tl" id="tl"></div>
+      <p class="hint">Clique dans un créneau vert, ou fais glisser pour choisir ta plage (comme dans Google Agenda). Tu peux ensuite l'étirer par le bas. Les détails de son agenda restent privés : tu vois juste si elle est dispo.</p>
+    </div>
+  </div>
+</main>
+
+<!-- ============ VUE MAWUNA ============ -->
+<main id="vAdmin" hidden>
+  <div class="band stripes"></div>
+  <div class="sec" style="padding-top:0">
+    <div class="ahead">
+      <div class="title-card"><h2 class="t">Hello <span class="js-host">Mawuna</span> 💅</h2></div>
+    </div>
+    <div class="stats" id="aStats"></div>
+    <div class="tabs" id="aTabs">
+      <button class="tab on" data-tab="req">Demandes</button>
+      <button class="tab" data-tab="cal">Mon agenda</button>
+      <button class="tab" data-tab="up">À venir</button>
+      <button class="tab" data-tab="friends">Tes copines</button>
+      <button class="tab" data-tab="limits">Tes limites</button>
+      <button class="tab" data-tab="agenda">Dispos & agenda</button>
+      <button class="tab" data-tab="settings">Réglages</button>
+    </div>
+    <div id="aPanel"></div>
+  </div>
+</main>
+
+<nav class="demo" aria-label="Bascule de démo"><small>DÉMO</small><button class="on" data-view="friend">Vue copine</button><button data-view="admin">Vue Mawuna</button></nav>
+<div id="hearts" aria-hidden="true"></div>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+(function(){
+"use strict";
+/* ============ À REMPLIR UNE FOIS ============
+   Ta clé Web3Forms (gratuite, sur web3forms.com) : chaque demande de booking t'arrive par mail.
+   Laisse vide tant que tu n'en as pas, le site marche quand même. */
+const EMAIL_KEY = "";
+/* Notif WhatsApp automatique (CallMeBot, gratuit) : ton numéro au format +33… et ta clé CallMeBot. */
+const WA_PHONE = "+22991394004";
+const WA_KEY = "";
+/* ============================================ */
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad = n => String(n).padStart(2,"0");
+const iso = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const mins = t => { const [h,m] = t.split(":").map(Number); return h*60 + (m||0); };
+const hhmm = m => pad(Math.floor(m/60)) + ":" + pad(m%60);
+const fmtT = m => Math.floor(m/60) + "h" + (m%60 ? pad(m%60) : "");
+const DAYS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+const DSHORT = ["dim","lun","mar","mer","jeu","ven","sam"];
+const MONTHS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const today0 = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+function fmtDay(d, rel){
+  const t = today0(), diff = Math.round((d - t) / 864e5);
+  if (rel !== false){ if (diff === 0) return "Aujourd'hui"; if (diff === 1) return "Demain"; }
+  return cap(DAYS[d.getDay()] + " " + (d.getDate() === 1 ? "1er" : d.getDate()) + " " + MONTHS[d.getMonth()]);
+}
+const fmtDur = m => m >= 240 ? "Une demi-journée" : m < 60 ? m + " min" : (m % 60 ? Math.floor(m/60) + "h" + pad(m%60) : (m/60) + (m === 60 ? " heure" : " heures"));
+const weekStart = d => { const x = new Date(d); x.setHours(0,0,0,0); x.setDate(x.getDate() - (x.getDay()+6)%7); return x; };
+
+/* ---------- Données de démo ---------- */
+const DAY0 = 8*60, DAY1 = 23*60, STEP = 30;
+function seed(){
+  const t = today0(), off = n => iso(addDays(t, n));
+  const next = dow => { let n = 1; while (addDays(t, n).getDay() !== dow) n++; return n; };
+  return {
+    v: 3, host: "Mawuna", whatsapp: "+22991394004",
+    mode: "open", vacationUntil: off(14),
+    weeklyMax: 5,
+    rules: { maxPerDay: 2, noticeH: 24, maxDur: 180, buffer: 30, noDays: [0], privFrom: "22:00", privTo: "09:00", showNames: true },
+    weekly: {
+      1: [["18:30","21:30","ok"]], 2: [["18:30","21:30","ok"]],
+      3: [["12:00","14:00","maybe"],["18:30","21:30","ok"]], 4: [["18:30","21:30","ok"]],
+      5: [["18:00","22:00","maybe"]], 6: [["10:00","20:00","ok"]], 0: []
+    },
+    events: [
+      {id:"e1", title:"Salsa", dow:1, from:"19:00", to:"20:30", vis:"visible"},
+      {id:"e2", title:"Crochet club", dow:4, from:"19:30", to:"21:00", vis:"visible"},
+      {id:"e3", title:"Dentiste", date:off(next(3)), from:"18:30", to:"19:30", vis:"private"},
+      {id:"e4", title:"Boulot tard", date:off(next(2)), from:"18:30", to:"20:00", vis:"busy"},
+      {id:"e5", title:"Anniv de maman", date:off(next(6)+7), from:"12:00", to:"20:00", vis:"private"}
+    ],
+    activities: [
+      ["🛍️","Copine shopping"],["☕","Café & papotage"],["🍝","Dîner"],["📸","Shooting photo"],["🎥","Journée contenu"],["💅","Girls' day"],
+      ["🧠","J'ai besoin de conseils"],["🫂","Juste envie de te voir"],["🆘","Urgence papotage"],["🎉","On sort !"],["✏️","Autre chose"]
+    ],
+    bookings: [
+      {id:"b1", friend:"Ségolène", act:"Dîner", date:off(-5), from:"20:30", dur:120, place:"Chez moi", status:"accepted", msg:""},
+      {id:"b2", friend:"Judith", act:"Café & papotage", date:off(-12), from:"18:30", dur:60, place:"Ailleurs : Café Piha", status:"accepted", msg:""},
+      {id:"b3", friend:"Inès", act:"Copine shopping", date:off(-20), from:"14:00", dur:120, place:"Ailleurs : rue Sainte-Catherine", status:"accepted", msg:""},
+      {id:"b4", friend:"Ségolène", act:"Café & papotage", date:off(-26), from:"11:00", dur:60, place:"Chez toi", status:"accepted", msg:""},
+      {id:"b5", friend:"Clara", act:"Shooting photo", date:off(-9), from:"15:00", dur:120, place:"Ailleurs : Jardin public", status:"accepted", msg:""},
+      {id:"b6", friend:"Judith", act:"Copine shopping", date:off(-33), from:"15:00", dur:120, place:"Ailleurs : Mériadeck", status:"declined", msg:""},
+      {id:"b7", friend:"Ségolène", act:"Dîner", date:off(next(5)), from:"20:30", dur:120, place:"Chez moi", status:"accepted", msg:""},
+      {id:"b8", friend:"Judith", act:"Copine shopping", date:off(next(6)), from:"14:00", dur:120, place:"Ailleurs : rue Sainte-Catherine", status:"pending", msg:"J'ai désespérément besoin de quelqu'un pour me dire si cette robe me va.", created:Date.now()-36e5},
+      {id:"b9", friend:"Inès", act:"J'ai besoin de conseils", date:off(next(3)), from:"20:00", dur:60, place:"En ligne", status:"pending", msg:"Petit dilemme boulot, j'ai besoin de ton cerveau 🧠", created:Date.now()-2*36e5}
+    ],
+    notifs: [
+      {t:Date.now()-36e5, i:"🛍️", txt:"Judith veut t'emmener faire du shopping."},
+      {t:Date.now()-2*36e5, i:"💌", txt:"Inès veut te booker."},
+      {t:Date.now()-26*36e5, i:"🎉", txt:"C'est un date avec Ségolène, vendredi soir."}
+    ],
+    mine: [], me: ""
+  };
+}
+let S;
+try { S = JSON.parse(localStorage.getItem("book-mawuna-demo") || "null"); } catch(e){ S = null; }
+if (!S || S.v !== 3) S = seed();
+function save(){ try { localStorage.setItem("book-mawuna-demo", JSON.stringify(S)); } catch(e){} }
+const HOST = () => S.host || "Mawuna";
+const actEmoji = a => ((S.activities.find(x => x[1] === a) || ["✨"])[0]);
+
+/* ---------- Disponibilités ---------- */
+function cellsFor(d){
+  const key = iso(d), dow = d.getDay(), n = (DAY1-DAY0)/STEP, cells = [];
+  const now = new Date(), minStart = now.getTime() + S.rules.noticeH*36e5;
+  const accepted = S.bookings.filter(b => b.date === key && b.status === "accepted");
+  const pf = mins(S.rules.privFrom), pt = mins(S.rules.privTo);
+  for (let i = 0; i < n; i++){
+    const a = DAY0 + i*STEP, b = a + STEP;
+    let st = "off", label = "";
+    (S.weekly[dow] || []).forEach(w => { if (a >= mins(w[0]) && b <= mins(w[1])) st = "ok"; });
+    if (S.rules.noDays.includes(dow)) st = "off";
+    if (a >= pf || b <= pt) st = "off";
+    S.events.forEach(e => {
+      const on = e.dow !== undefined && e.dow !== null && e.dow !== "" ? Number(e.dow) === dow : e.date === key;
+      if (on && a < mins(e.to) && b > mins(e.from)){
+        if (e.vis === "private"){ st = "private"; label = "Privé"; }
+        else { st = "busy"; label = e.vis === "visible" && S.rules.showNames ? e.title : "Occupée"; }
+      }
+    });
+    accepted.forEach(k => {
+      const f = mins(k.from), t = f + k.dur;
+      if (a < t && b > f){ st = "booked"; label = "Déjà prise ♥"; }
+      else if ((st === "ok" || st === "maybe") && a < t + S.rules.buffer && b > f - S.rules.buffer) st = "off";
+    });
+    const start = new Date(d); start.setHours(0, a, 0, 0);
+    if ((st === "ok" || st === "maybe")){
+      if (start.getTime() < minStart) st = "off";
+      if (accepted.length >= S.rules.maxPerDay) st = "full";
+      if (S.mode !== "open" || battery() <= 0) st = "closed";
+    }
+    cells.push({a, b, st, label});
+  }
+  return cells;
+}
+function segments(d){
+  const c = cellsFor(d), out = [];
+  c.forEach(x => {
+    const l = out[out.length-1];
+    if (l && l.st === x.st && l.label === x.label) l.b = x.b; else out.push({a:x.a, b:x.b, st:x.st, label:x.label});
+  });
+  return out;
+}
+function fits(d, start, dur){
+  const c = cellsFor(d); let kind = "ok";
+  for (let m = start; m < start + dur; m += STEP){
+    const x = c.find(y => y.a === m);
+    if (!x || (x.st !== "ok" && x.st !== "maybe")) return null;
+    if (x.st === "maybe") kind = "maybe";
+  }
+  return kind;
+}
+function nextSlots(from, dur, count, skip){
+  const res = [];
+  for (let i = 0; i < 60 && res.length < count; i++){
+    const d = addDays(from, i), segs = segments(d);
+    for (const s of segs){
+      if ((s.st === "ok" || s.st === "maybe") && s.b - s.a >= dur){
+        const k = iso(d) + " " + s.a;
+        if (skip && skip === k) continue;
+        res.push({date: iso(d), from: s.a, to: s.b, kind: s.st});
+        break;
+      }
+    }
+  }
+  return res;
+}
+function thisWeekAccepted(){
+  const ws = weekStart(new Date()), we = addDays(ws, 7);
+  return S.bookings.filter(b => b.status === "accepted" && parse(b.date) >= ws && parse(b.date) < we);
+}
+function battery(){ return S.weeklyMax ? Math.max(0, 1 - thisWeekAccepted().length / S.weeklyMax) : 1; }
+function battSvg(p){
+  const low = p <= 34, empty = p === 0;
+  return '<span class="batt'+(low?" low":"")+'" role="img" aria-label="Batterie sociale à '+p+' %"><span class="cell"><span class="fill" style="--p:'+p+'%"></span>'+(empty?'<span class="bolt">⚡</span>':'')+'</span><span class="tip"></span></span>';
+}
+function statusNow(){
+  if (S.mode === "vacation") return {cls:"st-off", txt:"✈️ En vacances jusqu'au " + fmtDay(parse(S.vacationUntil), false).replace(/^\w+ /, "")};
+  if (S.mode === "battery" || battery() <= 0) return {cls:"st-off", txt:"🔋 En train de recharger"};
+  const d = new Date(), m = d.getHours()*60 + d.getMinutes();
+  const c = cellsFor(today0()).find(x => m >= x.a && m < x.b);
+  const raw = c ? c.st : "off";
+  // Sans le préavis : ce qu'elle fait vraiment maintenant
+  const map = {ok:["st-ok","🟢 Dispo"], maybe:["st-maybe","🟡 Demande d'abord"], busy:["st-busy","🔴 Occupée"], private:["st-private","🔒 Occupée (privé)"], booked:["st-busy","💕 Avec une copine"]};
+  let key = raw;
+  if (raw === "off" || raw === "full" || raw === "closed"){
+    const dow = d.getDay();
+    const inWin = (S.weekly[dow]||[]).find(w => m >= mins(w[0]) && m < mins(w[1]));
+    key = inWin ? "ok" : "off";
+  }
+  const v = map[key] || ["st-off","🌙 Pas dispo là tout de suite"];
+  return {cls:v[0], txt:v[1]};
+}
+
+/* ---------- Rendu commun ---------- */
+document.querySelectorAll(".js-host").forEach(e => e.textContent = HOST());
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => t.hidden = true, 3200); }
+function hearts(ch){
+  const box = $("hearts");
+  for (let i = 0; i < 22; i++){
+    const h = document.createElement("span");
+    h.textContent = ch || ["♥","💌","✿"][i%3];
+    h.style.cssText = "left:"+(Math.random()*100)+"vw;font-size:"+(18+Math.random()*24)+"px;color:#F2C1B9;animation-delay:"+(Math.random()*.7)+"s;--dx:"+(Math.random()*80-40)+"px;--r:"+(Math.random()*80-40)+"deg";
+    box.appendChild(h); setTimeout(() => h.remove(), 3800);
+  }
+}
+(function stripes(){
+  let seedN = 7; const rnd = () => (seedN = (seedN * 9301 + 49297) % 233280) / 233280;
+  let x = 0, parts = [];
+  for (let i = 0; i < 120; i++){ const w = i % 2 ? 22 + rnd()*12 : 26 + rnd()*14; parts.push((i % 2 ? "#F2C1B9" : "#521A16") + " " + x.toFixed(1) + "px " + (x + w).toFixed(1) + "px"); x += w; }
+  const g = "linear-gradient(90deg," + parts.join(",") + ")";
+  document.querySelectorAll(".stripes").forEach(el => { el.style.backgroundImage = g; el.style.backgroundSize = x.toFixed(0) + "px 100%"; el.style.backgroundRepeat = "repeat-x"; });
+})();
+function renderNav(){
+  const p = S.mode === "open" ? Math.round(battery()*100) : 0;
+  const txt = S.mode === "vacation" ? HOST() + " est en vacances ✈️" : p ? HOST() + " est à " + p + " %" : HOST() + " recharge ses batteries";
+  $("battPill").innerHTML = battSvg(p) + '<span class="lbl">' + txt + '</span>';
+  $("battPill").title = "Batterie sociale : chaque rendez-vous de la semaine la fait baisser";
+  const mine = S.mine.map(id => S.bookings.find(b => b.id === id)).filter(Boolean);
+  const pill = $("myReqPill");
+  pill.hidden = view !== "friend" || !mine.length;
+  pill.innerHTML = '💌 <span class="lbl">Tes demandes</span>' + (mine.some(b => b.status !== "pending" && !b.seen) ? '<span class="dot">!</span>' : "");
+  const bell = $("bellPill"), unread = S.notifs.filter(x => x.t > (S.seenAt || 0)).length;
+  bell.hidden = view !== "admin";
+  bell.innerHTML = '🔔 <span class="lbl">Notifs</span>' + (unread ? '<span class="dot">' + unread + '</span>' : "");
+  if (view !== "admin") $("notifPop").hidden = true;
+}
+function renderPop(){
+  const list = S.notifs.slice(0, 12);
+  $("notifPop").innerHTML = '<div class="nph"><b class="t">Tes notifs</b><button class="link" id="npClose">Fermer</button></div>' + (list.length ? list.map(x => '<div class="notif'+(x.t > (S.seenAt || 0) ? " new" : "")+'"><span>'+x.i+'</span><span>'+esc(x.txt.replace(/^(\p{Extended_Pictographic}\uFE0F?\s)/u,""))+'</span><time>'+ago(x.t)+'</time></div>').join("") : '<div class="empty">Rien pour l\'instant</div>');
+  $("npClose").onclick = () => togglePop(false);
+}
+function togglePop(open){
+  const pop = $("notifPop"); open = open === undefined ? pop.hidden : open;
+  if (open){ renderPop(); pop.hidden = false; S.seenAt = Date.now(); save(); }
+  else pop.hidden = true;
+  $("bellPill").setAttribute("aria-expanded", open ? "true" : "false");
+  renderNav();
+}
+
+/* ---------- Accueil ---------- */
+function renderHome(){
+  const s = statusNow();
+  if ($("nowState")){ $("nowState").className = "state " + s.cls; $("nowState").textContent = s.txt; }
+  const nx = nextSlots(today0(), 60, 1)[0];
+  if ($("nextSlot")) $("nextSlot").textContent = nx ? fmtDay(parse(nx.date)) + ", " + fmtT(nx.from) + " à " + fmtT(nx.to) + (nx.kind === "maybe" ? " (demande d'abord)" : "") : (S.mode === "vacation" ? "À son retour ♥" : "Wow. Tout le monde est pris. 😭");
+  $("bookNext").onclick = () => go("pick");
+  const ws = weekStart(new Date()), strip = $("weekStrip");
+  if (strip) strip.innerHTML = "";
+  for (let i = 0; strip && i < 7; i++){
+    const d = addDays(ws, i), segs = segments(d), isT = iso(d) === iso(today0());
+    const el = document.createElement("button"); el.className = "wday" + (isT ? " today" : "");
+    const span = DAY1 - DAY0;
+    const bars = segs.filter(x => ["ok","maybe","busy","private","booked"].includes(x.st)).map(x => {
+      const c = {ok:"var(--ok)", maybe:"var(--maybe)", busy:"var(--choco)", booked:"var(--choco)", private:"repeating-linear-gradient(135deg,var(--priv) 0 4px,#fff 4px 7px)"}[x.st];
+      return '<i style="top:'+((x.a-DAY0)/span*100)+'%;height:'+((x.b-x.a)/span*100)+'%;background:'+c+'"></i>';
+    }).join("");
+    const free = segs.filter(x => x.st === "ok").reduce((n,x) => n + x.b - x.a, 0);
+    el.innerHTML = '<span class="h">'+DSHORT[d.getDay()]+'</span><span class="n">'+d.getDate()+'</span><span class="wbar">'+bars+'</span><span class="sum">'+(free ? fmtT(free).replace(/h$/,"h") + " libres" : S.rules.noDays.includes(d.getDay()) ? "off" : "")+'</span>';
+    el.setAttribute("aria-label", fmtDay(d, false) + (free ? ", " + fmtT(free) + " réservables" : ", pas de créneau réservable"));
+    el.addEventListener("click", () => { calWeek = 0; calDay = i; go("cal"); });
+    strip.appendChild(el);
+  }
+}
+function renderMine(){
+  const mine = S.mine.map(id => S.bookings.find(b => b.id === id)).filter(Boolean).reverse();
+  const box = $("mineList"); box.innerHTML = "";
+  if (!mine.length){ box.innerHTML = '<div class="card empty">Pas encore de demande. <button class="link" id="mineEmpty">Book-moi ♥</button></div>'; $("mineEmpty").onclick = () => go("pick"); }
+  mine.forEach(b => {
+    const el = document.createElement("div"); el.className = "req";
+    const when = fmtDay(parse(b.date)) + ", " + fmtT(mins(b.from)) + " à " + fmtT(mins(b.from) + b.dur);
+    const tags = {pending:'<span class="tag tg-pending">⏳ En attente de '+esc(HOST())+'</span>', accepted:'<span class="tag tg-accepted">🎉 C\'est un date !</span>', declined:'<span class="tag tg-declined">Refusé poliment. Elle a le droit d\'avoir une vie.</span>', suggested:'<span class="tag tg-suggested">💡 '+esc(HOST())+' te propose un autre créneau</span>'};
+    let acts = "";
+    if (b.status === "suggested" && b.alt) acts = '<p><b>' + esc(fmtDay(parse(b.alt.date))) + ', ' + fmtT(b.alt.from) + '</b> au lieu de ' + esc(when) + '</p><div class="acts"><button class="btn sm" data-a="take">Ça me va ♥</button><button class="btn soft sm" data-a="other">Choisir autre chose</button></div>';
+    if (b.status === "declined") acts = '<div class="acts"><button class="btn soft sm" data-a="other">Choisir un autre créneau</button></div>';
+    el.innerHTML = '<span class="em">'+actEmoji(b.act)+'</span><div class="bd"><h4>'+esc(b.act)+'</h4><p>'+esc(when)+', '+esc(b.place)+'</p>'+tags[b.status]+acts+'</div>';
+    el.querySelectorAll("[data-a]").forEach(x => x.addEventListener("click", () => {
+      if (x.dataset.a === "take"){ b.date = b.alt.date; b.from = hhmm(b.alt.from); b.status = "accepted"; delete b.alt; S.notifs.unshift({t:Date.now(), i:"🎉", txt:"C'est un date : " + b.friend + " a accepté ta proposition."}); save(); hearts(); toast("🎉 C'est un date !"); renderAll(); }
+      else go("pick");
+    }));
+    b.seen = true;
+    box.appendChild(el);
+  });
+  save();
+}
+
+/* ---------- Calendrier ---------- */
+let calWeek = 0, calDay = null;
+const HH = 44; // px par heure
+function renderCal(){
+  const ws = addDays(weekStart(new Date()), calWeek*7);
+  document.querySelectorAll("[data-w]").forEach(b => b.classList.toggle("on", Number(b.dataset.w) === calWeek));
+  $("wPrev").disabled = calWeek <= 0; $("wNext").disabled = calWeek >= 7;
+  const we = addDays(ws, 6);
+  $("wLabel").textContent = "Du " + ws.getDate() + (ws.getMonth() !== we.getMonth() ? " " + MONTHS[ws.getMonth()] : "") + " au " + we.getDate() + " " + MONTHS[we.getMonth()];
+  if (calDay === null){ calDay = calWeek === 0 ? (new Date().getDay()+6)%7 : 0; }
+  const tl = $("tl"), pick = $("dayPick"); tl.innerHTML = ""; pick.innerHTML = "";
+  tl.style.setProperty("--hh", HH + "px");
+  const H = (DAY1 - DAY0) / 60 * HH;
+  const hours = document.createElement("div"); hours.className = "hours";
+  hours.style.cssText = "margin-top:52px;height:"+H+"px";
+  for (let h = DAY0/60; h <= DAY1/60; h += 2){ const s = document.createElement("span"); s.style.top = ((h*60 - DAY0)/60*HH) + "px"; s.textContent = h + "h"; hours.appendChild(s); }
+  tl.appendChild(hours);
+  for (let i = 0; i < 7; i++){
+    const d = addDays(ws, i), isT = iso(d) === iso(today0());
+    const pb = document.createElement("button"); pb.className = i === calDay ? "on" : "";
+    pb.innerHTML = DSHORT[d.getDay()] + "<b>" + d.getDate() + "</b>";
+    pb.addEventListener("click", () => { calDay = i; renderCal(); });
+    pick.appendChild(pb);
+    const col = document.createElement("div"); col.className = "col" + (isT ? " today" : "") + (i === calDay ? " sel" : "");
+    col.innerHTML = '<div class="ch"><small>'+DSHORT[d.getDay()]+'</small><b>'+d.getDate()+'</b></div>';
+    const lane = document.createElement("div"); lane.className = "lane"; lane.dataset.date = iso(d); lane.style.height = H + "px";
+    const segs = segments(d);
+    const any = segs.some(s => ["ok","maybe","busy","private","booked"].includes(s.st));
+    if (S.rules.noDays.includes(d.getDay()) && !segs.some(s => ["busy","private","booked"].includes(s.st))) lane.innerHTML = '<div class="dayoff">Pas de booking le ' + DAYS[d.getDay()] + '. Elle se repose 🛌</div>';
+    else if (S.mode === "vacation") lane.innerHTML = '<div class="dayoff">✈️ En vacances</div>';
+    else if (S.mode === "battery" || battery() <= 0) lane.innerHTML = '<div class="dayoff">🔋 Batterie à plat, elle recharge</div>';
+    segs.forEach(s => {
+      if (!["ok","maybe","busy","private","booked","full"].includes(s.st)) return;
+      if (s.st === "full" && segs.indexOf(s) !== segs.findIndex(x => x.st === "full")) return;
+      const b = document.createElement(s.st === "ok" || s.st === "maybe" ? "button" : "div");
+      const cls = {ok:"b-ok", maybe:"b-maybe", busy:"b-busy", private:"b-private", booked:"b-busy", full:"b-full"}[s.st];
+      b.className = "blk " + cls;
+      b.style.top = ((s.a - DAY0)/60*HH + 2) + "px"; b.style.height = Math.max(20, (s.b - s.a)/60*HH - 4) + "px";
+      const title = {ok:"Libre", maybe:"Libre", busy:s.label || "Occupée", private:"🔒 Privé", booked:"Déjà prise ♥", full:"Complet ce jour-là"}[s.st];
+      b.innerHTML = '<span>' + esc(title) + '</span>' + (s.st !== "full" && s.b - s.a >= 60 ? '<span class="bt">' + fmtT(s.a) + ' à ' + fmtT(s.b) + '</span>' : "");
+      if (s.st === "ok" || s.st === "maybe"){
+        b.setAttribute("aria-label", fmtDay(d, false) + ", " + title + " de " + fmtT(s.a) + " à " + fmtT(s.b));
+        b.addEventListener("pointerdown", ev => startSel(ev, lane, iso(d), s));
+        b.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); calSel = {date: iso(d), seg: {a:s.a, b:s.b}, a: s.a, b: Math.min(s.b, s.a + 60, s.a + S.rules.maxDur)}; renderCal(); } });
+      }
+      if (s.st === "full") { b.style.top = "40%"; b.style.height = "auto"; }
+      lane.appendChild(b);
+    });
+    if (calSel && calSel.date === iso(d)) drawSel(lane);
+    col.appendChild(lane); tl.appendChild(col);
+  }
+}
+document.querySelectorAll("[data-w]").forEach(b => b.addEventListener("click", () => { calWeek = Number(b.dataset.w); calDay = null; renderCal(); }));
+$("wPrev").addEventListener("click", () => { calWeek--; calDay = 0; renderCal(); });
+$("wNext").addEventListener("click", () => { calWeek++; calDay = 0; renderCal(); });
+
+/* ---------- Sélection à la Google Agenda ---------- */
+let calSel = null, drag = null;
+const yToMin = (lane, y) => DAY0 + ((y - lane.getBoundingClientRect().top) / HH) * 60;
+function clampSel(){
+  const sg = calSel.seg, max = S.rules.maxDur;
+  calSel.a = Math.max(sg.a, calSel.a); calSel.b = Math.min(sg.b, calSel.b);
+  if (calSel.b - calSel.a > max){ if (drag && drag.mode === "up") calSel.a = calSel.b - max; else calSel.b = calSel.a + max; }
+  if (calSel.b - calSel.a < STEP) calSel.b = calSel.a + STEP;
+}
+function startSel(ev, lane, date, seg){
+  ev.preventDefault();
+  const m = Math.min(seg.b - STEP, Math.max(seg.a, Math.floor(yToMin(lane, ev.clientY) / STEP) * STEP));
+  calSel = {date, seg:{a:seg.a, b:seg.b}, a:m, b:m + STEP};
+  drag = {lane, anchor:m, moved:false, mode:"down", touch: ev.pointerType === "touch"};
+  if (!drag.touch){ document.addEventListener("pointermove", moveSel); }
+  document.addEventListener("pointerup", endSel, {once:true});
+  renderCal();
+}
+function moveSel(ev){
+  if (!drag) return;
+  const lane = document.querySelector('.lane[data-date="'+calSel.date+'"]'); if (!lane) return;
+  const m = yToMin(lane, ev.clientY);
+  if (drag.mode === "resize"){ calSel.b = Math.ceil(m / STEP) * STEP; }
+  else if (m >= drag.anchor){ drag.mode = "down"; calSel.a = drag.anchor; calSel.b = Math.ceil(m / STEP) * STEP; }
+  else { drag.mode = "up"; calSel.b = drag.anchor + STEP; calSel.a = Math.floor(m / STEP) * STEP; }
+  if (calSel.b - calSel.a > STEP) drag.moved = true;
+  clampSel(); updateSel(lane);
+}
+function endSel(){
+  document.removeEventListener("pointermove", moveSel);
+  if (drag && !drag.moved && drag.mode !== "resize"){ calSel.b = calSel.a + 60; clampSel(); }
+  drag = null; renderCal();
+}
+function drawSel(lane){
+  const box = document.createElement("div"); box.className = "selbox";
+  box.innerHTML = '<span class="st"></span><span class="sd"></span>'
+    + (drag ? "" : '<button class="selgo">Réserver →</button><button class="selx" aria-label="Annuler">✕</button>')
+    + '<span class="selh" aria-label="Étirer" title="Étire pour allonger"></span>';
+  lane.appendChild(box); updateSel(lane);
+  if (drag) return;
+  box.querySelector(".selgo").addEventListener("click", e => { e.stopPropagation(); const c = calSel; calSel = null; openSheet(c.date, c.a, c.b - c.a); });
+  box.querySelector(".selx").addEventListener("click", e => { e.stopPropagation(); calSel = null; renderCal(); });
+  box.querySelector(".selh").addEventListener("pointerdown", e => {
+    e.preventDefault(); e.stopPropagation();
+    drag = {lane, anchor:calSel.a, moved:true, mode:"resize"};
+    document.addEventListener("pointermove", moveSel);
+    document.addEventListener("pointerup", endSel, {once:true});
+  });
+}
+function updateSel(lane){
+  const box = lane.querySelector(".selbox"); if (!box) return;
+  box.style.top = ((calSel.a - DAY0) / 60 * HH + 2) + "px";
+  box.style.height = Math.max(drag ? 18 : 60, (calSel.b - calSel.a) / 60 * HH - 4) + "px";
+  const st = box.querySelector(".st"), sd = box.querySelector(".sd");
+  if (st) st.textContent = fmtT(calSel.a) + " à " + fmtT(calSel.b);
+  if (sd) sd.textContent = fmtDur(calSel.b - calSel.a).toLowerCase();
+}
+
+/* ---------- Parcours de booking ---------- */
+let B = null;
+const DURS = [[30,"30 min","Petit papotage express."],[60,"1 heure","Le temps d'un café."],[120,"2 heures","Là, on parle."],[240,"Une demi-journée","Tu me bookes pour toute la journée ? 😭"],["c","Sur mesure","Dis-moi combien."]];
+const PLACES = [["🏠","Chez toi"],["🏡","Chez moi"],["📍","Ailleurs"],["💻","En ligne"],["✨","Surprends-moi"]];
+function openSheet(date, from, preset){
+  const origin = page === "cal" ? "cal" : "pick";
+  B = {step:0, origin, date, from, preset: preset || 0, act:null, dur: preset ? "c" : null, custom: preset || 90, place:null, where:"", note:"", msg:"", who:S.me || ""};
+  go("book");
+}
+function closeSheet(){ B = null; }
+function leaveBooking(){ const o = B ? B.origin : "pick"; B = null; go(o); }
+function isOther(){ return !!B && B.act === "Autre chose"; }
+function actName(){ return isOther() ? (B.other || "").trim() : B.act; }
+function durVal(){ return B.dur === "c" ? B.custom : B.dur; }
+function renderSheet(){
+  const box = $("bookBox"), d = parse(B.date);
+  const dots = (B.preset ? [0,2,3] : [0,1,2,3]).map(i => '<i class="'+(i <= B.step ? "on" : "")+'"></i>').join("");
+  const endTxt = durVal() ? " à " + fmtT(B.from + durVal()) : "";
+  const order = B.preset ? [["m","Le moment"],[0,"L'activité"],[2,"Le lieu"],[3,"Ta demande"]] : [["m","Le moment"],[0,"L'activité"],[1,"La durée"],[2,"Le lieu"],[3,"Ta demande"]];
+  const pos = order.findIndex(o => o[0] === B.step);
+  $("bookSteps").hidden = B.step === 4;
+  $("bookSteps").innerHTML = order.map((o,i) => '<li><button type="button" class="'+(i < pos ? "done" : i === pos ? "on" : "")+'" data-bs="'+o[0]+'"'+(i > pos ? " disabled" : "")+'><span>'+(i < pos ? "✓" : i+1)+'</span>'+o[1]+'</button></li>').join("");
+  $("bookSteps").querySelectorAll("[data-bs]").forEach(b => b.onclick = () => { const v = b.dataset.bs; if (v === "m") leaveBooking(); else { B.step = Number(v); renderSheet(); } });
+  $("bookWhen").hidden = B.step === 4;
+  $("bookWhen").innerHTML = '📅 <b>' + esc(fmtDay(d)) + ', ' + fmtT(B.from) + endTxt + '</b> <button class="link" id="chgMoment">Changer</button>';
+  $("bookTitle").innerHTML = "Ta demande";
+  $("bookBox").style.marginTop = B.step === 4 ? "28px" : "";
+  let h = "";
+  if (B.step === 0){
+    h += '<h3>Tu as besoin de ' + esc(HOST()) + ' pour quoi ?</h3><div class="grid-acts">' + S.activities.map((a,i) => '<button class="opt'+(B.act === a[1] ? " on" : "")+'" data-act="'+i+'"><span class="e">'+a[0]+'</span>'+esc(a[1])+'</button>').join("") + '</div>';
+    if (isOther()) h += '<div class="fld"><label for="actOther">Dis-moi tout, tu as besoin de moi pour quoi ?</label><input id="actOther" maxlength="50" value="'+esc(B.other||"")+'"></div>';
+    h += '<div class="sh-bar"><button class="btn soft" id="shLeave">← Retour</button><button class="btn" id="shNext"'+(B.act && (!isOther() || (B.other||"").trim()) ? "" : " disabled")+'>Suivant →</button></div>';
+  }
+  if (B.step === 1){
+    const seg = segments(d).find(s => B.from >= s.a && B.from < s.b) || {a:B.from, b:B.from+STEP};
+    const starts = []; for (let m = seg.a; m < seg.b; m += STEP) starts.push(m);
+    h += '<h3>Tu as besoin de moi combien de temps ?</h3><div class="list">' + DURS.map(x => {
+      const v = x[0] === "c" ? B.custom : x[0];
+      const over = v > S.rules.maxDur, nofit = !fits(d, B.from, v);
+      const dis = over || nofit;
+      return '<button class="opt'+(B.dur === x[0] ? " on" : "")+'" data-dur="'+x[0]+'"'+(dis && x[0] !== "c" ? " disabled" : "")+'><span><b>'+x[1]+'</b><small>'+(over ? "Au-delà de " + fmtDur(S.rules.maxDur).toLowerCase() + ", faut négocier 😭" : nofit && x[0] !== "c" ? "Ça ne rentre pas dans ce créneau" : x[2])+'</small></span></button>';
+    }).join("") + '</div>';
+    if (B.dur === "c") h += '<div class="fld"><label for="cust">Durée sur mesure (en minutes)</label><input id="cust" type="number" min="30" step="30" max="'+S.rules.maxDur+'" value="'+B.custom+'"></div>';
+    h += '<div class="fld"><label>Heure de début</label><div class="chips">' + starts.map(m => '<button class="chip'+(m === B.from ? " on" : "")+'" data-st="'+m+'">'+fmtT(m)+'</button>').join("") + '</div></div>';
+    const k = durVal() ? fits(d, B.from, durVal()) : "ok";
+    if (durVal() && !k) h += '<div class="warn">Ce créneau est trop court pour cette durée. Essaie une heure de début plus tôt ou une durée plus courte.</div>';
+    if (k === "maybe") h += '<div class="warn">🟡 Ce créneau est en « demande d\'abord » : elle confirmera si c\'est ok pour elle.</div>';
+    h += '<div class="sh-bar"><button class="btn soft" id="shBack">← Retour</button><button class="btn" id="shNext"'+(durVal() && k && durVal() <= S.rules.maxDur ? "" : " disabled")+'>Suivant →</button></div>';
+  }
+  if (B.step === 2){
+    h += '<h3>On va où ?</h3><div class="grid-acts">' + PLACES.map(p => '<button class="opt'+(B.place === p[1] ? " on" : "")+'" data-pl="'+esc(p[1])+'"><span class="e">'+p[0]+'</span>'+p[1]+'</button>').join("") + '</div>';
+    if (B.place === "Ailleurs") h += '<div class="fld"><label for="where">C\'est où ?</label><input id="where" maxlength="80" value="'+esc(B.where)+'"></div>';
+    h += '<div class="fld"><label for="note">Une précision sur le lieu (optionnel)</label><input id="note" maxlength="100" value="'+esc(B.note)+'"></div>';
+    h += '<div class="sh-bar"><button class="btn soft" id="shBack">← Retour</button><button class="btn" id="shNext"'+(B.place && (B.place !== "Ailleurs" || B.where.trim()) ? "" : " disabled")+'>Suivant →</button></div>';
+  }
+  if (B.step === 3){
+    const place = placeTxt();
+    h += '<h3>On vérifie tout ?</h3><div class="ticket"><div class="k">DEMANDE DE BOOKING</div><dl>'
+      + '<div><dt>Activité</dt><dd>'+(isOther() ? "✏️" : actEmoji(B.act))+' '+esc(actName())+'</dd></div>'
+      + '<div><dt>Date</dt><dd>'+esc(fmtDay(d, false))+'</dd></div>'
+      + '<div><dt>Heure</dt><dd>'+fmtT(B.from)+' à '+fmtT(B.from+durVal())+'</dd></div>'
+      + '<div><dt>Lieu</dt><dd>'+esc(place)+'</dd></div></dl></div>';
+    h += '<div class="fld"><label for="who">Ton prénom</label><input id="who" maxlength="30" autocomplete="given-name" value="'+esc(B.who)+'"></div>';
+    h += '<div class="fld"><label for="contact">Ton WhatsApp ou ton mail, pour que je te réponde</label><input id="contact" maxlength="80" autocomplete="email" value="'+esc(B.contact||S.myContact||"")+'"></div>';
+    h += '<div class="fld"><label for="msg">Un petit message (optionnel)</label><textarea id="msg" rows="3" maxlength="240">'+esc(B.msg)+'</textarea></div>';
+    h += '<div class="sh-bar"><button class="btn soft" id="shBack">← Retour</button><button class="btn" id="shSend"'+(B.who.trim() ? "" : " disabled")+'>Envoyer ma demande 💌</button></div>';
+  }
+  if (B.step === 4){
+    const txt = "Coucou " + HOST() + " ! C'est " + B.who + ".\nJe t'ai bookée sur Book " + HOST() + " 💌\n" + (isOther() ? "✏️" : actEmoji(B.act)) + " " + actName() + "\n📅 " + fmtDay(d, false) + ", " + fmtT(B.from) + " à " + fmtT(B.from + durVal()) + "\n📍 " + placeTxt() + (B.msg ? "\n\n« " + B.msg + " »" : "") + "\n\nTu me dis ? xoxo";
+    const wa = "https://wa.me/" + String(S.whatsapp||WA_PHONE||"").replace(/\D/g,"") + "?text=" + encodeURIComponent(txt);
+    const mailTxt = {sending:"⏳ Envoi à " + HOST() + " en cours…", ok:"✓ " + HOST() + " a reçu ta demande par mail.", fail:"Oups, le mail n'est pas parti. Envoie-lui plutôt ta demande sur WhatsApp ↓"}[B.mail];
+    const waTxt = {sending:"⏳ Notif WhatsApp en route…", ok:"✓ " + HOST() + " a reçu une notif sur WhatsApp.", fail:"La notif WhatsApp n'est pas partie, écris-lui directement ↓"}[B.wa];
+    h += '<div class="sent"><div class="big">💌</div><h3>Demande envoyée !</h3>' + (waTxt ? '<p class="mailst '+B.wa+'">'+esc(waTxt)+'</p><br>' : '') + (mailTxt ? '<p class="mailst '+B.mail+'">'+esc(mailTxt)+'</p>' : '') + '<p>' + esc(HOST()) + ' va recevoir « Quelqu\'un veut te booker ». Elle accepte, refuse ou te propose un autre créneau. Tu suis tout dans « Tes demandes ».</p>'
+      + '<div class="sh-bar" style="justify-content:center"><a class="btn soft" href="'+wa+'" target="_blank" rel="noopener">Lui écrire sur WhatsApp</a><button class="btn" id="shDone">Top, merci ♥</button></div></div>';
+  }
+  box.innerHTML = h;
+  if ($("shLeave")) $("shLeave").onclick = leaveBooking;
+  if ($("chgMoment")) $("chgMoment").onclick = leaveBooking;
+  box.querySelectorAll("[data-act]").forEach(b => b.onclick = () => { B.act = S.activities[b.dataset.act][1]; renderSheet(); if (isOther() && $("actOther")) $("actOther").focus(); });
+  const ao = $("actOther"); if (ao) ao.oninput = () => { B.other = ao.value; $("shNext").disabled = !ao.value.trim(); };
+  box.querySelectorAll("[data-dur]").forEach(b => b.onclick = () => { B.dur = b.dataset.dur === "c" ? "c" : Number(b.dataset.dur); renderSheet(); });
+  box.querySelectorAll("[data-st]").forEach(b => b.onclick = () => { B.from = Number(b.dataset.st); renderSheet(); });
+  box.querySelectorAll("[data-pl]").forEach(b => b.onclick = () => { B.place = b.dataset.pl; renderSheet(); if (B.place === "Ailleurs") $("where").focus(); });
+  const bind = (id, key, re) => { const el = $(id); if (el) el.oninput = () => { B[key] = key === "custom" ? Math.max(30, Math.round(Number(el.value)/30)*30 || 30) : el.value; if (re) { const n = $("shNext") || $("shSend"); if (key === "who") n.disabled = !B.who.trim(); if (key === "where") n.disabled = !B.where.trim(); } }; };
+  bind("where","where",true); bind("note","note"); bind("who","who",true); bind("msg","msg"); bind("contact","contact");
+  const cust = $("cust"); if (cust) cust.onchange = () => { B.custom = Math.min(S.rules.maxDur, Math.max(30, Math.round(Number(cust.value)/30)*30 || 30)); renderSheet(); };
+  if ($("shNext")) $("shNext").onclick = () => { B.step += (B.preset && B.step === 0) ? 2 : 1; renderSheet(); };
+  if ($("shBack")) $("shBack").onclick = () => { B.step -= (B.preset && B.step === 2) ? 2 : 1; renderSheet(); };
+  if ($("shSend")) $("shSend").onclick = sendBooking;
+  if ($("shDone")) $("shDone").onclick = () => { closeSheet(); go("mine"); };
+}
+function placeTxt(){ return B.place === "Ailleurs" ? "Ailleurs : " + B.where.trim() + (B.note ? " (" + B.note + ")" : "") : B.place + (B.note ? " (" + B.note + ")" : ""); }
+function sendBooking(){
+  const id = "b" + Date.now();
+  S.me = B.who.trim();
+  const kind = fits(parse(B.date), B.from, durVal());
+  S.bookings.push({id, friend:S.me, act:actName(), date:B.date, from:hhmm(B.from), dur:durVal(), place:placeTxt(), msg:B.msg.trim(), status:"pending", created:Date.now(), maybe: kind === "maybe"});
+  S.mine.push(id);
+  const special = {"Copine shopping":"🛍️ " + S.me + " veut t'emmener faire du shopping.", "Dîner":"🍝 " + S.me + " veut dîner avec toi.", "Urgence papotage":"🆘 " + S.me + " a une urgence papotage.", "Juste envie de te voir":"🫂 " + S.me + " a juste envie de te voir."};
+  S.notifs.unshift({t:Date.now(), i:"💌", txt: special[B.act] || (isOther() ? "✏️ " + S.me + " veut te voir pour : " + actName() + "." : "💌 Quelqu'un veut te booker : " + S.me + ".")});
+  pSel = null; pT = null; pEnd = null;
+  S.myContact = (B.contact || "").trim();
+  save(); B.step = 4; B.mail = emailKey() ? "sending" : "off"; B.wa = waCfg() ? "sending" : "off"; renderSheet(); hearts(); renderAll();
+  const nb = S.bookings[S.bookings.length-1];
+  if (emailKey()) sendMail(nb);
+  if (waCfg()) sendWa(nb);
+}
+function waCfg(){ const ph = WA_PHONE || S.waPhone || "", k = WA_KEY || S.waKey || ""; return ph && k ? {ph, k} : null; }
+function sendWa(b){
+  const c = waCfg(), f = mins(b.from), ct = S.myContact || "";
+  const t = "💌 " + b.friend + " veut te booker !\n" + b.act + "\n📅 " + fmtDay(parse(b.date), false) + ", " + fmtT(f) + " à " + fmtT(f + b.dur) + "\n📍 " + b.place + (b.msg ? "\n« " + b.msg + " »" : "") + (ct ? "\nSon contact : " + ct : "") + "\n\nOuvre book me pour répondre ♥";
+  fetch("https://api.callmebot.com/whatsapp.php?phone=" + encodeURIComponent(c.ph) + "&text=" + encodeURIComponent(t) + "&apikey=" + encodeURIComponent(c.k), {mode:"no-cors"})
+    .then(() => { if (B) { B.wa = "ok"; renderSheet(); } })
+    .catch(() => { if (B) { B.wa = "fail"; renderSheet(); } });
+}
+function emailKey(){ return EMAIL_KEY || S.emailKey || ""; }
+function sendMail(b){
+  const f = mins(b.from), c = S.myContact, digits = c.replace(/\D/g, "");
+  const reply = c.includes("@") ? "Réponds-lui : " + c : digits.length >= 9 ? "Réponds-lui sur WhatsApp : https://wa.me/" + (digits.startsWith("0") ? "33" + digits.slice(1) : digits) : c ? "Son contact : " + c : "Pas de contact laissé.";
+  const text = [
+    "💌 " + b.friend + " veut te booker !", "",
+    "Activité : " + b.act,
+    "Date : " + fmtDay(parse(b.date), false),
+    "Heure : " + fmtT(f) + " à " + fmtT(f + b.dur) + " (" + fmtDur(b.dur).toLowerCase() + ")",
+    "Lieu : " + b.place,
+    b.msg ? "Son message : « " + b.msg + " »" : "", "",
+    reply, "",
+    "Ouvre book me pour accepter, refuser ou proposer un autre créneau ♥"
+  ].filter((x, i, a) => x !== "" || a[i-1] !== "").join("\n");
+  const body = {access_key: emailKey(), subject: "💌 " + b.friend + " veut te booker : " + b.act + ", " + fmtDay(parse(b.date), false), from_name: "book me", name: b.friend, message: text};
+  if (c.includes("@")) body.replyto = c;
+  fetch("https://api.web3forms.com/submit", {method:"POST", headers:{"Content-Type":"application/json", "Accept":"application/json"}, body: JSON.stringify(body)})
+    .then(r => r.json()).then(j => { if (B) { B.mail = j.success ? "ok" : "fail"; renderSheet(); } })
+    .catch(() => { if (B) { B.mail = "fail"; renderSheet(); } });
+}
+
+/* ---------- Vue Mawuna ---------- */
+let aTab = "req";
+document.querySelectorAll("[data-tab]").forEach(b => b.addEventListener("click", () => { aTab = b.dataset.tab; renderAdmin(); }));
+function hoursOf(list){ return list.reduce((n,b) => n + b.dur, 0); }
+function fmtH(m){ return Math.floor(m/60) + "h" + (m%60 ? pad(m%60) : ""); }
+function renderAdmin(){
+  document.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("on", b.dataset.tab === aTab));
+  const wk = thisWeekAccepted();
+  const counts = {}; S.bookings.filter(b => b.status !== "declined").forEach(b => counts[b.act] = (counts[b.act]||0) + 1);
+  const top = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0,3);
+  const pend = S.bookings.filter(b => b.status === "pending");
+  $("aStats").innerHTML =
+    '<div class="stat"><b>'+wk.length+'</b><span>bookings cette semaine</span></div>'
+  + '<div class="stat"><b>'+fmtH(hoursOf(wk))+'</b><span>ensemble cette semaine</span></div>'
+  + '<div class="stat"><b>'+new Set(wk.map(b => b.friend)).size+'</b><span>copines cette semaine</span></div>'
+  + '<div class="stat"><b>'+pend.length+'</b><span>'+(pend.length > 1 ? "demandes" : "demande")+' en attente</span></div>'
+  + '<div class="stat"><span>Les plus demandés</span><div class="podium" style="margin-top:6px">'+(top.map((t,i) => ["🥇","🥈","🥉"][i]+" "+actEmoji(t[0])+" "+esc(t[0])).join("<br>") || "Pas encore")+'</div></div>';
+  const tabReq = document.querySelector('[data-tab="req"]'); tabReq.textContent = "Demandes" + (pend.length ? " (" + pend.length + ")" : "");
+  const P = $("aPanel");
+  if (aTab === "req") P.innerHTML = adminReq(pend);
+  if (aTab === "cal") P.innerHTML = adminCal();
+  if (aTab === "up") P.innerHTML = adminUp();
+  if (aTab === "friends") P.innerHTML = adminFriends();
+  if (aTab === "limits") P.innerHTML = adminLimits();
+  if (aTab === "agenda") P.innerHTML = adminAgenda();
+  if (aTab === "settings") P.innerHTML = adminSettings();
+  bindAdmin();
+}
+function whenTxt(b){ return fmtDay(parse(b.date)) + ", " + fmtT(mins(b.from)) + " à " + fmtT(mins(b.from) + b.dur); }
+function reqCard(b, withActs){
+  let h = '<div class="req" data-id="'+b.id+'"><span class="em">'+actEmoji(b.act)+'</span><div class="bd"><h4>'+esc(b.friend)+' veut te booker</h4><p><b>'+esc(b.act)+'</b>, '+esc(whenTxt(b))+'<br>📍 '+esc(b.place)+(b.maybe ? '<br>🟡 Sur un créneau « demande d\'abord »' : '')+'</p>'+(b.msg ? '<p style="font-style:italic">« '+esc(b.msg)+' »</p>' : '');
+  if (withActs){
+    h += '<div class="acts"><button class="btn ok sm" data-do="accept">Accepter 🎉</button><button class="btn soft sm" data-do="suggest">Proposer un autre créneau</button><button class="btn soft sm" data-do="decline">Refuser</button></div>';
+    if (b._alts){
+      h += '<div class="alts"><b style="color:var(--choco)">'+esc(fmtDay(parse(b.date)))+' '+fmtT(mins(b.from))+' ❌ Et si plutôt :</b>' + (b._alts.length ? b._alts.map((a,i) => '<div class="row"><span>'+esc(fmtDay(parse(a.date)))+', '+fmtT(a.from)+' à '+fmtT(a.from + b.dur)+'</span><button class="btn sm" data-alt="'+i+'">Proposer ce créneau</button></div>').join("") : '<span>Wow. Tout le monde est pris, toi y compris. 😭</span>') + '</div>';
+    }
+  }
+  return h + '</div></div>';
+}
+function adminReq(pend){
+  return '<div class="panel"><div class="set"><h3>💌 Quelqu\'un veut te voir</h3></div>' + (pend.length ? pend.sort((a,b) => (a.date+a.from).localeCompare(b.date+b.from)).map(b => reqCard(b, true)).join("") : '<div class="card empty">Aucune demande. Profite, tu as le droit d\'avoir une vie.</div>')
+    + '</div>';
+}
+function ago(t){ const m = Math.round((Date.now()-t)/6e4); return m < 1 ? "à l'instant" : m < 60 ? "il y a " + m + " min" : m < 1440 ? "il y a " + Math.round(m/60) + " h" : "il y a " + Math.round(m/1440) + " j"; }
+function adminUp(){
+  const t = iso(today0());
+  const up = S.bookings.filter(b => b.status === "accepted" && b.date >= t).sort((a,b) => (a.date+a.from).localeCompare(b.date+b.from));
+  const sug = S.bookings.filter(b => b.status === "suggested");
+  return '<div class="panel">' + (up.length ? up.map(b => '<div class="req"><span class="em">'+actEmoji(b.act)+'</span><div class="bd"><h4>'+esc(b.act)+' avec '+esc(b.friend)+'</h4><p>'+esc(whenTxt(b))+'<br>📍 '+esc(b.place)+'</p><span class="tag tg-accepted">🎉 C\'est un date</span></div></div>').join("") : '<div class="card empty">Rien de prévu. Ta batterie te remercie. 🔋</div>')
+    + (sug.length ? '<div class="set" style="margin-top:10px"><h3>Propositions envoyées</h3></div>' + sug.map(b => '<div class="req"><span class="em">'+actEmoji(b.act)+'</span><div class="bd"><h4>'+esc(b.friend)+'</h4><p>Tu as proposé '+esc(fmtDay(parse(b.alt.date)))+', '+fmtT(b.alt.from)+'</p><span class="tag tg-suggested">En attente de sa réponse</span></div></div>').join("") : "") + '</div>';
+}
+function adminFriends(){
+  const names = [...new Set(S.bookings.map(b => b.friend))];
+  const t = iso(today0());
+  return '<div class="friends">' + names.map(n => {
+    const all = S.bookings.filter(b => b.friend === n && b.status === "accepted");
+    const past = all.filter(b => b.date < t).sort((a,b) => b.date.localeCompare(a.date));
+    const acts = {}; all.forEach(b => acts[b.act] = (acts[b.act]||0)+1);
+    const fav = Object.entries(acts).sort((a,b) => b[1]-a[1])[0];
+    return '<div class="friend"><div class="av">'+esc(n.charAt(0))+'</div><h4>'+esc(n)+'</h4><div class="fs"><div><b>'+all.length+'</b><span>bookings</span></div><div><b>'+fmtH(hoursOf(all))+'</b><span>ensemble</span></div><div><b>'+Object.keys(acts).length+'</b><span>activités</span></div></div>'
+      + '<p>💖 Son classique : '+(fav ? actEmoji(fav[0])+" "+esc(fav[0]) : "à découvrir")+'</p><p>🗓️ Dernière fois : '+(past[0] ? esc(fmtDay(parse(past[0].date), false)) : "pas encore")+'</p></div>';
+  }).join("") + '</div>';
+}
+function num(id, v, min, max, step, suf){ return '<div class="fld"><label for="'+id+'">'+suf+'</label><input id="'+id+'" type="number" min="'+min+'" max="'+max+'" step="'+step+'" value="'+v+'"></div>'; }
+function adminLimits(){
+  const r = S.rules;
+  return '<div class="card set"><h3>Tes limites de copine</h3><p class="sub">Book '+esc(HOST())+' doit rendre l\'amitié plus simple, pas te rendre dispo H24. Ces règles s\'appliquent tout de suite au calendrier.</p><div class="form">'
+    + num("rMaxDay", r.maxPerDay, 1, 6, 1, "Bookings max par jour")
+    + num("rWeek", S.weeklyMax, 1, 20, 1, "Bookings max par semaine (batterie)")
+    + num("rNotice", r.noticeH, 0, 168, 1, "Préavis minimum (heures)")
+    + num("rMax", r.maxDur, 30, 480, 30, "Durée max d'un booking (minutes)")
+    + num("rBuf", r.buffer, 0, 120, 15, "Pause entre deux bookings (minutes)")
+    + '<div class="fld"><label>Heures privées</label><div style="display:flex;gap:8px;align-items:center"><input id="rPf" type="time" value="'+r.privFrom+'"><span>à</span><input id="rPt" type="time" value="'+r.privTo+'"></div></div>'
+    + '</div><div class="fld"><label>Jours sans booking</label><div class="days">' + [1,2,3,4,5,6,0].map(d => '<button data-nd="'+d+'" class="'+(r.noDays.includes(d) ? "on" : "")+'">'+cap(DSHORT[d])+'</button>').join("") + '</div></div>'
+    + '<div class="sh-bar"><span class="sub">Tu as le droit d\'avoir une vie. 💅</span><button class="btn" id="saveLimits">Enregistrer</button></div></div>';
+}
+function adminAgenda(){
+  const opts = (v, list) => list.map(o => '<option value="'+o[0]+'"'+(String(v) === String(o[0]) ? " selected" : "")+'>'+o[1]+'</option>').join("");
+  const dayOpts = [[1,"Lundi"],[2,"Mardi"],[3,"Mercredi"],[4,"Jeudi"],[5,"Vendredi"],[6,"Samedi"],[0,"Dimanche"]];
+  let rows = "";
+  [1,2,3,4,5,6,0].forEach(d => (S.weekly[d]||[]).forEach((w,i) => {
+    rows += '<div class="rowx" data-wd="'+d+'" data-wi="'+i+'"><b style="color:var(--choco)">'+cap(DAYS[d])+'</b><input type="time" data-k="0" value="'+w[0]+'"><input type="time" data-k="1" value="'+w[1]+'"><span class="sub">Libre</span><button class="del" data-delw aria-label="Supprimer">✕</button></div>';
+  }));
+  const evs = S.events.map((e,i) => '<div class="rowx ev" data-ei="'+i+'"><input data-f="title" value="'+esc(e.title)+'" aria-label="Nom"><select data-f="when">'+opts(e.dow !== undefined && e.dow !== null && e.dow !== "" ? "w"+e.dow : "d", [["d","Une date"],...dayOpts.map(x => ["w"+x[0], "Chaque " + x[1].toLowerCase()])])+'</select><input type="date" data-f="date" value="'+(e.date||"")+'"'+(e.dow !== undefined && e.dow !== null && e.dow !== "" ? ' style="visibility:hidden"' : "")+'><input type="time" data-f="from" value="'+e.from+'"><input type="time" data-f="to" value="'+e.to+'"><select data-f="vis">'+opts(e.vis, [["visible","👀 Nom visible"],["busy","🔴 Juste « occupée »"],["private","🔒 Privé"]])+'</select><button class="del" data-dele aria-label="Supprimer">✕</button></div>').join("");
+  return '<div class="panel"><div class="card set"><h3>Tes dispos de la semaine</h3><p class="sub">Tes copines voient ces plages comme libres et t\'envoient une demande : c\'est toujours toi qui acceptes. Book '+esc(HOST())+' génère tout seul les créneaux à partir de ces plages, en respectant tes limites.</p><div class="rows">'+rows+'</div>'
+    + '<div class="addrow"><select id="nwD">'+opts(6, dayOpts)+'</select><input id="nwF" type="time" value="14:00"><input id="nwT" type="time" value="18:00"><button class="btn soft sm" id="addW">+ Ajouter une plage</button></div></div>'
+    + '<div class="card set"><h3>Ton agenda</h3><p class="sub">Tes événements bloquent tes dispos. Tes copines ne voient jamais le détail d\'un événement privé : juste « Privé » ou « Occupée ».</p><div class="rows">'+evs+'</div><div class="addrow"><button class="btn soft sm" id="addE">+ Ajouter un événement</button></div>'
+    + '<div class="cals">' + [["Google Agenda","📅"],["Apple Calendar","🍎"],["Outlook","📨"]].map(c => '<div class="calc"><span>'+c[1]+' '+c[0]+'</span><small>Bientôt : tes événements bloqueront tes dispos automatiquement, sans jamais montrer leur contenu.</small><button class="btn soft sm" disabled>Connecter</button></div>').join("") + '</div>'
+    + '<div class="sh-bar"><span></span><button class="btn" id="saveAgenda">Enregistrer</button></div></div></div>';
+}
+function adminSettings(){
+  const modes = [["open","🟢 Ouverte aux bookings","Tes copines peuvent te booker."],["battery","🔋 Batterie sociale à 0 %","« Mawuna prend du temps pour elle. »"],["vacation","✈️ Mode vacances","« Mawuna est partie. » avec ta date de retour."]];
+  return '<div class="panel"><div class="card set"><h3>Ne pas déranger</h3><p class="sub">Ferme tes dispos quand tu en as besoin. Tes copines voient juste quand tu redeviens bookable.</p><div class="modes" style="margin-top:12px">' + modes.map(m => '<button class="opt'+(S.mode === m[0] ? " on" : "")+'" data-mode="'+m[0]+'"><span><b>'+m[1]+'</b><small>'+m[2].replace("Mawuna", esc(HOST()))+'</small></span></button>').join("") + '</div>'
+    + (S.mode === "vacation" ? '<div class="fld"><label for="vacU">De retour le</label><input id="vacU" type="date" value="'+S.vacationUntil+'"></div>' : "") + '</div>'
+    + '<div class="card set"><h3>Tes activités</h3><p class="sub">La liste que tes copines voient quand elles te bookent.</p><div class="actchips">' + S.activities.map((a,i) => '<span>'+a[0]+' '+esc(a[1])+'<button data-dela="'+i+'" aria-label="Retirer">✕</button></span>').join("") + '</div><div class="addrow"><input id="naE" maxlength="4" value="🍰" style="width:64px" aria-label="Emoji"><input id="naN" maxlength="30" aria-label="Nom de la nouvelle activité"><button class="btn soft sm" id="addA">+ Ajouter</button></div></div>'
+    + '<div class="card set"><h3>Confidentialité</h3><p class="sub">Par défaut, tes copines voient seulement si tu es dispo. Tu choisis ce qui reste visible.</p><div class="modes" style="margin-top:12px"><button class="opt'+(S.rules.showNames ? " on" : "")+'" data-names="1"><span><b>👀 Montrer le nom des activités « visibles »</b><small>Par exemple « Salsa » au lieu de « Occupée »</small></span></button><button class="opt'+(!S.rules.showNames ? " on" : "")+'" data-names="0"><span><b>🙈 Tout cacher</b><small>Tout est « Occupée » ou « Privé »</small></span></button></div></div>'
+    + '<div class="card set"><h3>Ton profil</h3><div class="form"><div class="fld"><label for="sHost">Ton prénom</label><input id="sHost" value="'+esc(HOST())+'"></div><div class="fld"><label for="sWa">Ton WhatsApp (optionnel)</label><input id="sWa" inputmode="tel" value="'+esc(S.whatsapp)+'"></div></div><div class="form" style="margin-top:6px"><div class="fld"><label for="sWaPh">Notif WhatsApp : ton numéro (+33…)</label><input id="sWaPh" inputmode="tel" value="'+esc(WA_PHONE || S.waPhone || "")+'"'+(WA_PHONE ? " disabled" : "")+'></div><div class="fld"><label for="sWaKey">Ta clé CallMeBot</label><input id="sWaKey" autocomplete="off" value="'+esc(WA_KEY || S.waKey || "")+'"'+(WA_KEY ? " disabled" : "")+'></div></div><p class="sub" style="margin-top:6px">'+(waCfg() ? "✓ Activé : chaque demande t\'arrive en notif WhatsApp." : "Active CallMeBot sur ton WhatsApp (voir callmebot.com), puis colle ton numéro et ta clé ici.")+'</p><div class="fld"><label for="sKey">Recevoir les demandes par mail : ta clé Web3Forms</label><input id="sKey" autocomplete="off" value="'+esc(EMAIL_KEY || S.emailKey || "")+'"'+(EMAIL_KEY ? " disabled" : "")+'></div><p class="sub" style="margin-top:6px">'+(emailKey() ? "✓ Activé : chaque demande t\'arrive par mail." : "Crée ta clé gratuite sur web3forms.com avec ton adresse mail, colle-la ici pour tester. Pour le vrai site, je la mets dans le fichier.")+'</p><div class="sh-bar"><button class="btn soft sm" id="resetDemo">Remettre la démo à zéro</button><button class="btn" id="saveProfile">Enregistrer</button></div></div></div>';
+}
+/* ---------- Mon agenda (vue Mawuna, avec tous les détails) ---------- */
+let aWeek = 0, aDay = null;
+function adminCal(){
+  const ws = addDays(weekStart(new Date()), aWeek*7), we = addDays(ws, 6), t = iso(today0());
+  if (aDay === null) aDay = aWeek === 0 ? (new Date().getDay()+6)%7 : 0;
+  const H = (DAY1 - DAY0) / 60 * HH;
+  const pos = (a, b) => 'top:'+((a - DAY0)/60*HH + 2)+'px;height:'+Math.max(20, (b - a)/60*HH - 4)+'px';
+  let hours = '<div class="hours" style="margin-top:52px;height:'+H+'px">';
+  for (let h = DAY0/60; h <= DAY1/60; h += 2) hours += '<span style="top:'+((h*60 - DAY0)/60*HH)+'px">'+h+'h</span>';
+  hours += '</div>';
+  let pick = "", cols = "";
+  for (let i = 0; i < 7; i++){
+    const d = addDays(ws, i), key = iso(d), dow = d.getDay();
+    pick += '<button data-aday="'+i+'" class="'+(i === aDay ? "on" : "")+'">'+DSHORT[dow]+'<b>'+d.getDate()+'</b></button>';
+    let blocks = "";
+    if (!S.rules.noDays.includes(dow)) (S.weekly[dow] || []).forEach(w => { blocks += '<div class="blk a-free" style="'+pos(mins(w[0]), mins(w[1]))+'"><span>Libre</span><span class="bt">'+fmtT(mins(w[0]))+' à '+fmtT(mins(w[1]))+'</span></div>'; });
+    S.events.forEach(e => {
+      const on = e.dow !== undefined && e.dow !== null && e.dow !== "" ? Number(e.dow) === dow : e.date === key;
+      if (!on) return;
+      const vis = e.vis === "private" ? "🔒 privé" : e.vis === "busy" ? "vu « occupée »" : "nom visible";
+      blocks += '<div class="blk '+(e.vis === "private" ? "b-private" : "b-busy")+'" style="'+pos(mins(e.from), mins(e.to))+'" title="Tes copines voient : '+(e.vis === "private" ? "Privé" : e.vis === "busy" ? "Occupée" : esc(e.title))+'"><span>'+esc(e.title)+'</span><span class="bt">'+fmtT(mins(e.from))+' à '+fmtT(mins(e.to))+', '+vis+'</span></div>';
+    });
+    S.bookings.filter(b => b.date === key && (b.status === "accepted" || b.status === "pending")).forEach(b => {
+      const f = mins(b.from);
+      blocks += '<button class="blk '+(b.status === "accepted" ? "a-date" : "a-pend")+'" data-bid="'+b.id+'" style="'+pos(f, f + b.dur)+'"><span>'+(b.status === "accepted" ? "🎉 " : "⏳ ")+esc(b.friend)+'</span><span class="bt">'+actEmoji(b.act)+' '+esc(b.act)+', '+fmtT(f)+' à '+fmtT(f + b.dur)+'</span></button>';
+    });
+    cols += '<div class="col'+(key === t ? " today" : "")+(i === aDay ? " sel" : "")+'"><div class="ch"><small>'+DSHORT[dow]+'</small><b>'+d.getDate()+'</b></div><div class="lane" style="height:'+H+'px">'+blocks+'</div></div>';
+  }
+  return '<div class="card calwrap" style="margin-top:0"><div class="calbar"><b>Du '+ws.getDate()+(ws.getMonth() !== we.getMonth() ? " " + MONTHS[ws.getMonth()] : "")+' au '+we.getDate()+' '+MONTHS[we.getMonth()]+'</b>'
+    + '<div class="wnav"><button class="tab'+(aWeek === 0 ? " on" : "")+'" data-aw="0">Cette semaine</button><button class="tab'+(aWeek === 1 ? " on" : "")+'" data-aw="1">Semaine pro</button><button class="tab" data-aw="-"'+(aWeek <= 0 ? " disabled" : "")+' aria-label="Semaine précédente">←</button><button class="tab" data-aw="+"'+(aWeek >= 7 ? " disabled" : "")+' aria-label="Semaine suivante">→</button></div></div>'
+    + '<div class="legend" style="margin-bottom:14px"><span><i class="i-ok"></i>Tes plages libres</span><span><i style="background:var(--rose2);box-shadow:inset 0 0 0 2px var(--choco2)"></i>Date confirmée</span><span><i style="background:#fff;outline:1.5px dashed var(--choco);outline-offset:-2px"></i>Demande en attente</span><span><i class="i-busy"></i>Tes événements</span><span><i class="i-private"></i>Privés</span></div>'
+    + '<div class="daypick">'+pick+'</div><div class="tl" style="--hh:'+HH+'px">'+hours+cols+'</div>'
+    + '<p class="hint">Ici tu vois tout, avec les vrais noms. Tes copines, elles, voient seulement « Libre », « Occupée » ou « Privé ». Clique sur une demande en attente pour y répondre.</p></div>';
+}
+
+function bindAdmin(){
+  const P0 = $("aPanel");
+  P0.querySelectorAll("[data-aw]").forEach(b => b.addEventListener("click", () => { const v = b.dataset.aw; aWeek = v === "+" ? aWeek + 1 : v === "-" ? aWeek - 1 : Number(v); aDay = null; renderAdmin(); }));
+  P0.querySelectorAll("[data-aday]").forEach(b => b.addEventListener("click", () => { aDay = Number(b.dataset.aday); renderAdmin(); }));
+  P0.querySelectorAll("[data-bid]").forEach(b => b.addEventListener("click", () => { const k = S.bookings.find(x => x.id === b.dataset.bid); aTab = k && k.status === "pending" ? "req" : "up"; renderAdmin(); window.scrollTo({top: $("aTabs").offsetTop - 20, behavior:"smooth"}); }));
+  const P = $("aPanel");
+  P.querySelectorAll(".req[data-id] [data-do]").forEach(btn => btn.addEventListener("click", () => {
+    const b = S.bookings.find(x => x.id === btn.closest(".req").dataset.id);
+    if (btn.dataset.do === "accept"){
+      b.status = "accepted"; S.notifs.unshift({t:Date.now(), i:"🎉", txt:"C'est un date avec " + b.friend + "."}); save(); hearts(); toast("🎉 C'est un date avec " + b.friend + " !");
+    }
+    if (btn.dataset.do === "decline"){ b.status = "declined"; save(); toast("Refusé poliment. Tu as le droit d'avoir une vie."); }
+    if (btn.dataset.do === "suggest"){ b._alts = nextSlots(parse(b.date), b.dur, 3, b.date + " " + mins(b.from)).map(a => ({date:a.date, from:a.from})); }
+    renderAll();
+  }));
+  P.querySelectorAll("[data-alt]").forEach(btn => btn.addEventListener("click", () => {
+    const b = S.bookings.find(x => x.id === btn.closest(".req").dataset.id);
+    b.alt = b._alts[Number(btn.dataset.alt)]; delete b._alts; b.status = "suggested"; b.seen = false;
+    save(); toast("💡 Proposition envoyée à " + b.friend + " !"); renderAll();
+  }));
+  P.querySelectorAll("[data-nd]").forEach(b => b.addEventListener("click", () => b.classList.toggle("on")));
+  if ($("saveLimits")) $("saveLimits").onclick = () => {
+    const r = S.rules, n = id => Number($(id).value);
+    r.maxPerDay = Math.max(1, n("rMaxDay")); S.weeklyMax = Math.max(1, n("rWeek")); r.noticeH = Math.max(0, n("rNotice")); r.maxDur = Math.max(30, n("rMax")); r.buffer = Math.max(0, n("rBuf"));
+    r.privFrom = $("rPf").value || "22:00"; r.privTo = $("rPt").value || "09:00";
+    r.noDays = [...P.querySelectorAll("[data-nd].on")].map(b => Number(b.dataset.nd));
+    save(); toast("Limites enregistrées. Ta batterie te dit merci 🔋"); renderAll();
+  };
+  P.querySelectorAll("[data-delw]").forEach(b => b.addEventListener("click", () => { const r = b.closest(".rowx"); S.weekly[r.dataset.wd].splice(Number(r.dataset.wi), 1); save(); renderAll(); }));
+  if ($("addW")) $("addW").onclick = () => { const d = $("nwD").value; (S.weekly[d] = S.weekly[d] || []).push([$("nwF").value, $("nwT").value, "ok"]); save(); renderAll(); };
+  P.querySelectorAll("[data-dele]").forEach(b => b.addEventListener("click", () => { S.events.splice(Number(b.closest(".rowx").dataset.ei), 1); save(); renderAll(); }));
+  P.querySelectorAll('.rowx.ev [data-f="when"]').forEach(s => s.addEventListener("change", () => { s.closest(".rowx").querySelector('[data-f="date"]').style.visibility = s.value === "d" ? "visible" : "hidden"; }));
+  if ($("addE")) $("addE").onclick = () => { S.events.push({id:"e"+Date.now(), title:"Nouvel événement", date:iso(addDays(today0(), 2)), from:"19:00", to:"20:00", vis:"private"}); save(); renderAll(); };
+  if ($("saveAgenda")) $("saveAgenda").onclick = () => {
+    P.querySelectorAll(".rowx[data-wd]").forEach(r => { const w = S.weekly[r.dataset.wd][Number(r.dataset.wi)]; r.querySelectorAll("[data-k]").forEach(i => w[Number(i.dataset.k)] = i.value); });
+    P.querySelectorAll(".rowx.ev").forEach(r => {
+      const e = S.events[Number(r.dataset.ei)], f = k => r.querySelector('[data-f="'+k+'"]').value;
+      e.title = f("title") || "Événement"; e.from = f("from"); e.to = f("to"); e.vis = f("vis");
+      const w = f("when"); if (w === "d"){ delete e.dow; e.date = f("date") || iso(today0()); } else { e.dow = Number(w.slice(1)); delete e.date; }
+    });
+    save(); toast("Dispos et agenda mis à jour ✿"); renderAll();
+  };
+  P.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => { S.mode = b.dataset.mode; save(); toast(S.mode === "open" ? "🟢 Tu es de nouveau bookable !" : S.mode === "battery" ? "🔋 Batterie à 0 %. Prends soin de toi." : "✈️ Bonnes vacances !"); renderAll(); }));
+  if ($("vacU")) $("vacU").onchange = () => { S.vacationUntil = $("vacU").value; save(); renderAll(); };
+  P.querySelectorAll("[data-dela]").forEach(b => b.addEventListener("click", () => { S.activities.splice(Number(b.dataset.dela), 1); save(); renderAll(); }));
+  if ($("addA")) $("addA").onclick = () => { const n = $("naN").value.trim(); if (!n) return; S.activities.splice(S.activities.length - 1, 0, [$("naE").value.trim() || "✨", n]); save(); renderAll(); };
+  P.querySelectorAll("[data-names]").forEach(b => b.addEventListener("click", () => { S.rules.showNames = b.dataset.names === "1"; save(); renderAll(); }));
+  if ($("saveProfile")) $("saveProfile").onclick = () => { S.host = $("sHost").value.trim() || "Mawuna"; S.whatsapp = $("sWa").value.trim(); if ($("sKey") && !EMAIL_KEY) S.emailKey = $("sKey").value.trim(); if ($("sWaPh") && !WA_PHONE) S.waPhone = $("sWaPh").value.replace(/\s/g, ""); if ($("sWaKey") && !WA_KEY) S.waKey = $("sWaKey").value.trim(); save(); document.querySelectorAll(".js-host").forEach(e => e.textContent = HOST()); toast("Profil enregistré ♥"); renderAll(); };
+  if ($("resetDemo")) $("resetDemo").onclick = () => { S = seed(); save(); toast("Démo remise à zéro"); renderAll(); };
+}
+
+/* ---------- Calendrier date picker ---------- */
+const MINI = "M270 0 L269 1 L247 3 L225 8 L208 14 L190 23 L177 32 L162 46 L147 69 L136 81 L129 86 L117 92 L98 99 L75 112 L62 123 L48 142 L43 154 L39 171 L39 220 L38 221 L37 231 L30 247 L10 275 L5 286 L0 305 L0 326 L5 344 L17 367 L19 374 L18 393 L15 402 L7 416 L0 439 L0 461 L4 476 L11 491 L17 500 L30 515 L38 530 L41 544 L41 566 L42 567 L43 586 L46 600 L50 611 L58 625 L72 640 L86 650 L100 657 L126 665 L141 674 L149 682 L159 699 L172 714 L187 725 L204 734 L226 742 L253 748 L268 749 L269 750 L308 750 L309 749 L330 747 L348 743 L371 735 L390 725 L410 709 L419 697 L425 686 L436 674 L451 665 L472 659 L491 650 L505 640 L515 630 L522 620 L530 603 L534 586 L535 562 L536 561 L536 544 L540 528 L547 515 L567 489 L573 476 L576 466 L576 461 L577 460 L577 438 L573 422 L562 401 L560 395 L558 378 L561 365 L572 345 L577 327 L577 304 L572 285 L565 271 L546 245 L539 228 L539 223 L538 222 L538 171 L537 170 L536 160 L532 148 L521 129 L506 114 L491 104 L479 98 L458 91 L445 84 L433 73 L416 47 L403 34 L389 24 L372 15 L349 7 L324 2 L308 1 L307 0Z";
+let pView = null, pSel = null, pT = null, pEnd = null;
+function miniFrame(fill){ return '<svg viewBox="-20 -20 618 791" preserveAspectRatio="none" aria-hidden="true"><path d="'+MINI+'" fill="'+fill+'" stroke="#5E1711" stroke-width="26" stroke-linejoin="round"/></svg>'; }
+function startsFor(d){
+  const out = [];
+  segments(d).forEach(sg => { if (sg.st === "ok" || sg.st === "maybe") for (let m = sg.a; m + STEP <= sg.b; m += STEP) out.push({m, kind: sg.st}); });
+  return out;
+}
+function busyMarks(d){
+  return segments(d).filter(x => x.st === "busy" || x.st === "booked" || x.st === "private").map(x => ({a:x.a, b:x.b, st:x.st, label: x.st === "private" ? "Privé" : x.st === "booked" ? "Déjà prise" : x.label || "Occupée"}));
+}
+function mdayInfo(d){
+  const t = today0(), horizon = addDays(t, 56);
+  if (d < t || d > horizon) return {st:"past"};
+  if (S.mode !== "open" || battery() <= 0) return {st:"off"};
+  const marks = busyMarks(d);
+  const st = startsFor(d);
+  if (st.some(x => x.kind === "ok")) return {st:"free", marks};
+  if (st.length) return {st:"maybe", marks};
+  if (S.rules.noDays.includes(d.getDay())) return {st:"off", label:"repos"};
+  const wins = S.weekly[d.getDay()] || [];
+  if (!wins.length) return {st:"plain", marks};
+  // Préavis : ses plages de ce jour-là sont déjà trop proches
+  const lastEnd = Math.max(...wins.map(w => mins(w[1])));
+  const end = new Date(d); end.setHours(0, lastEnd, 0, 0);
+  if (end.getTime() < Date.now() + S.rules.noticeH*36e5) return {st:"late", label: iso(d) === iso(t) ? "trop tard" : "délai " + S.rules.noticeH + "h", marks};
+  if (S.bookings.filter(b => b.date === iso(d) && b.status === "accepted").length >= S.rules.maxPerDay) return {st:"late", label:"complet", marks};
+  // Toutes ses plages sont prises par des événements : là, elle est vraiment occupée
+  const b = marks[0];
+  return {st:"busy", label: b ? (b.st === "busy" && b.label !== "Occupée" ? b.label : b.st === "booked" ? "déjà prise" : "occupée") : "occupée", marks};
+}
+function renderPick(){
+  const t = today0();
+  if (!pView){
+    pView = new Date(t.getFullYear(), t.getMonth(), 1);
+    for (let i = 0; i < 56; i++){ const d = addDays(t, i); const k = mdayInfo(d).st; if (k === "free" || k === "maybe"){ pView = new Date(d.getFullYear(), d.getMonth(), 1); break; } }
+  }
+  const y = pView.getFullYear(), m = pView.getMonth();
+  $("pMonth").textContent = cap(MONTHS[m]) + (y !== t.getFullYear() ? " " + y : "");
+  const hz = addDays(t, 56);
+  $("pPrev").disabled = pView <= new Date(t.getFullYear(), t.getMonth(), 1);
+  $("pNext").disabled = pView >= new Date(hz.getFullYear(), hz.getMonth(), 1);
+  const g = $("pGrid"); g.innerHTML = "";
+  const lead = (new Date(y, m, 1).getDay()+6)%7, count = new Date(y, m+1, 0).getDate();
+  for (let i = 0; i < lead; i++){ const b = document.createElement("div"); b.className = "md blank"; g.appendChild(b); }
+  for (let n = 1; n <= count; n++){
+    const d = new Date(y, m, n), info = mdayInfo(d), sel = pSel === iso(d), click = info.st === "free" || info.st === "maybe";
+    const el = document.createElement(click ? "button" : "div");
+    el.className = "md " + info.st + (sel ? " sel" : "") + (iso(d) === iso(t) ? " today" : "");
+    if (click){
+      el.innerHTML = miniFrame(sel ? "#5E1711" : info.st === "maybe" ? "#FCE8A6" : "#FADDD9") + '<span class="num">'+n+'</span>' + (info.marks && info.marks.length ? '<i class="mk" title="Occupée une partie de la journée"></i>' : '');
+      el.setAttribute("aria-label", fmtDay(d, false) + (info.st === "maybe" ? ", demande d'abord" : ", libre"));
+      el.addEventListener("click", () => { pSel = iso(d); pT = null; pEnd = null; renderPick(); });
+    } else if (info.st === "late"){
+      el.innerHTML = '<span class="n">'+n+'</span><span class="lbl">'+esc(info.label)+'</span>';
+    } else if (info.st === "busy"){
+      el.innerHTML = '<span class="n">'+n+'</span><span class="lbl">'+esc(info.label)+'</span>';
+    } else el.textContent = n;
+    g.appendChild(el);
+  }
+  const box = $("pTimes");
+  if (!pSel){
+    const closed = S.mode !== "open" || battery() <= 0;
+    $("pDay").textContent = closed ? (S.mode === "vacation" ? "En vacances ✈️" : HOST() + " recharge ses batteries 🔋") : "Choisis un jour";
+    box.innerHTML = '<span class="muted">' + (closed ? "Reviens un peu plus tard ♥" : "Clique sur un jour encadré dans le calendrier.") + '</span>';
+    $("pNote").hidden = true;
+  } else {
+    const d = parse(pSel);
+    $("pDay").textContent = fmtDay(d);
+    box.innerHTML = "";
+    // Plages libres + moments pris, dans l'ordre de la journée
+    const segs = segments(d);
+    const items = [];
+    segs.forEach(sg => {
+      if (sg.st === "ok" || sg.st === "maybe"){
+        const last = items[items.length-1];
+        if (last && last.type === "win" && last.b === sg.a){ last.b = sg.b; if (sg.st === "maybe") last.maybe = true; if (sg.st === "ok") last.ok = true; last.parts.push(sg); }
+        else items.push({type:"win", a:sg.a, b:sg.b, maybe: sg.st === "maybe", ok: sg.st === "ok", parts:[sg]});
+      } else if (sg.st === "busy" || sg.st === "booked" || sg.st === "private"){
+        items.push({type:"busy", a:sg.a, b:sg.b, st:sg.st, label: sg.st === "private" ? "🔒 Privé" : sg.st === "booked" ? "Déjà prise ♥" : (sg.label || "Occupée")});
+      }
+    });
+    const partOf = (w, m) => (w.parts.find(x => m >= x.a && m < x.b) || w.parts[w.parts.length-1]).st;
+    const step = pT === null ? 1 : pEnd === null ? 2 : 3;
+    const guide = document.createElement("div"); guide.className = "pguide";
+    guide.innerHTML = '<span class="'+(step === 1 ? "on" : "done")+'">1. Début</span><span class="'+(step === 2 ? "on" : step === 3 ? "done" : "")+'">2. Fin</span>';
+    box.appendChild(guide);
+    const tip = document.createElement("p"); tip.className = "ptip";
+    tip.textContent = step === 1 ? "Touche l'heure où tu veux commencer." : step === 2 ? "Et maintenant, l'heure où on se quitte." : "Parfait ! Tu peux encore ajuster.";
+    box.appendChild(tip);
+    items.forEach((it, wi) => {
+      const row = document.createElement("div");
+      if (it.type === "busy"){
+        row.className = "prow busy";
+        row.innerHTML = '<span class="pl">'+fmtT(it.a)+' à '+fmtT(it.b)+'</span><span class="pb">'+esc(it.label)+'</span>';
+        box.appendChild(row); return;
+      }
+      const h = it.a / 60;
+      const name = it.b - it.a >= 300 ? "Toute la journée" : h < 12 ? "Matin" : h < 14 ? "Midi" : h < 18 ? "Après-midi" : "Soir";
+      row.className = "prow win";
+      row.innerHTML = '<span class="pl">'+name+'</span>';
+      const pills = document.createElement("div"); pills.className = "pills";
+      const inThis = pT !== null && pT >= it.a && pT < it.b;
+      for (let m = it.a; m <= it.b; m += STEP){
+        const b = document.createElement("button");
+        const isStart = pT === m && inThis, isEnd = pEnd === m && inThis;
+        const between = inThis && pEnd !== null && m > pT && m < pEnd;
+        let dis = false;
+        if (step === 2 && inThis && m > pT && m - pT > S.rules.maxDur) dis = true;
+        if ((step === 1 || !inThis || m <= pT) && m === it.b) dis = true; // la dernière heure sert seulement de fin
+        b.className = "pp" + (isStart || isEnd ? " on" : "") + (between ? " in" : "") ;
+        b.textContent = fmtT(m); b.disabled = dis; b.dataset.m = m; b.dataset.w = wi;
+        b.addEventListener("click", () => {
+          if (pT !== null && pEnd === null && inThis && m > pT){ pEnd = m; }
+          else { pT = m; pEnd = null; }
+          renderPick();
+        });
+        b.addEventListener("mouseenter", () => {
+          if (!(pT !== null && pEnd === null && inThis && m > pT)) return;
+          pills.querySelectorAll(".pp").forEach(x => { const v = Number(x.dataset.m); x.classList.toggle("hov", v > pT && v <= m); });
+        });
+        pills.appendChild(b);
+      }
+      pills.addEventListener("mouseleave", () => pills.querySelectorAll(".hov").forEach(x => x.classList.remove("hov")));
+      row.appendChild(pills);
+      box.appendChild(row);
+    });
+    const k = pT !== null && pEnd !== null ? fits(d, pT, pEnd - pT) : null;
+    const notes = [];
+    if (step === 3) notes.push("💌 " + fmtT(pT) + " à " + fmtT(pEnd) + ", soit " + fmtDur(pEnd - pT).toLowerCase() + (pEnd - pT >= 240 ? ". Tu me bookes pour toute la journée ? 😭" : pEnd - pT <= 30 ? ". Petit papotage express." : "."));
+    if (step === 2) notes.push("Jusqu'à " + fmtDur(S.rules.maxDur).toLowerCase() + " d'affilée, " + HOST() + " a aussi une vie 💅");
+    $("pNote").hidden = !notes.length;
+    $("pNote").innerHTML = notes.map(esc).join("<br>");
+    $("pNote").classList.toggle("ready", step === 3);
+  }
+  $("pGo").disabled = pT === null || pEnd === null;
+}
+$("pPrev").addEventListener("click", () => { pView = new Date(pView.getFullYear(), pView.getMonth()-1, 1); renderPick(); });
+$("pNext").addEventListener("click", () => { pView = new Date(pView.getFullYear(), pView.getMonth()+1, 1); renderPick(); });
+$("pGo").addEventListener("click", () => { if (pSel && pT !== null && pEnd !== null) openSheet(pSel, pT, pEnd - pT); });
+$("toAgenda").addEventListener("click", () => {
+  if (pSel){ const ws = weekStart(new Date()); const diff = Math.floor((parse(pSel) - ws) / 864e5); calWeek = Math.max(0, Math.floor(diff/7)); calDay = diff - calWeek*7; }
+  else { calWeek = 0; calDay = null; }
+  go("cal");
+});
+$("backPick").addEventListener("click", () => go("pick"));
+
+/* ---------- Navigation ---------- */
+let view = "friend", page = "home";
+function go(p){
+  page = p; if (p !== "book") closeSheet();
+  $("vHome").hidden = view !== "friend" || p !== "home";
+  $("vCal").hidden = view !== "friend" || p !== "cal";
+  $("vPick").hidden = view !== "friend" || p !== "pick";
+  $("vBook").hidden = view !== "friend" || p !== "book";
+  $("vMine").hidden = view !== "friend" || p !== "mine";
+  $("vAdmin").hidden = view !== "admin";
+  renderAll(); window.scrollTo(0,0);
+}
+function renderAll(){
+  renderNav();
+  if (view === "admin") renderAdmin();
+  else if (page === "home") renderHome();
+  else if (page === "pick") renderPick();
+  else if (page === "mine") renderMine();
+  else if (page === "book") { if (B) renderSheet(); else { page = "pick"; $("vBook").hidden = true; $("vPick").hidden = false; renderPick(); } }
+  else renderCal();
+}
+document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => { if (view === "admin") setView("friend"); go(b.dataset.go); }));
+$("myReqPill").addEventListener("click", () => go("mine"));
+$("bellPill").addEventListener("click", e => { e.stopPropagation(); togglePop(); });
+document.addEventListener("click", e => { if (!$("notifPop").hidden && !e.target.closest(".bellwrap")) togglePop(false); });
+function setView(v){ view = v; document.querySelectorAll("[data-view]").forEach(b => b.classList.toggle("on", b.dataset.view === v)); }
+document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => { setView(b.dataset.view); go(view === "admin" ? "admin" : "home"); }));
+
+go("home");
+})();
+</script>
+</body>
+</html>
